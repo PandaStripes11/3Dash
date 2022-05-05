@@ -587,87 +587,32 @@ def init():
 
     # Ground
     model = Matrix()
-    model = model.scale(3, 1, 3)
     model = model.translate(0, -5, 0)
     scene.add_polyhedron("ground1", Cube(model))
-
-    # Tree trunk
-    model = Matrix()
-    model = model.translate(0, -3, 0)
-    scene.add_polyhedron("trunk", Cube(model, "saddlebrown"))
-
-    # Leaves
-    model = Matrix()
-    model = model.scale(3, 1, 3)
-    model = model.translate(0, -1, 0)
-    scene.add_polyhedron("leaf_0", Cube(model, "forestgreen"))
-
-    model = Matrix()
-    model = model.scale(2, 1, 2)
-    model = model.translate(0, 1, 0)
-    scene.add_polyhedron("leaf_1", Cube(model, "forestgreen"))
-
-    model = Matrix()
-    model = model.translate(0, 3, 0)
-    scene.add_polyhedron("leaf_2", Cube(model, "forestgreen"))
-    
-    # Mountains
-    model = Matrix()
-    model = model.scale(6, 6, 6)
-    model = model.translate(0, 0, -20)
-    scene.add_polyhedron("mountain_center", Tetrahedron(model))
-    
-    model = Matrix()
-    model = model.scale(4, 4, 4)
-    model = model.translate(5, 0, -25)
-    scene.add_polyhedron("mountain_right", Tetrahedron(model, "dimgray"))
-    
-    model = Matrix()
-    model = model.scale(5, 5, 5)
-    model = model.translate(-5, 0, -26)
-    scene.add_polyhedron("mountain_left", Tetrahedron(model, "darkgray"))
-
 
 init()
 """INITIALIZE SCENE"""
 
 
-
+# TODO: Create Game State
 
 """ RENDER LOOP """
 def render(scene: object):
+    currFrame = None; prevFrame = time(); deltaTime = None
+
+    cubePos = 0
     while 0 == 0:
+        currFrame = time()
+        deltaTime = currFrame - prevFrame
+        prevFrame = time()
+
         processInput()
 
         # Star
         model = Matrix()
-        model = model.scale(0.5, 0.5, 0.5)
-        rotationAxis = Vector(0, 1, 0)
-        rotationAxis.normalize()
-        model = model.rotate(rotationAxis, 10*time())
-        model = model.translate(0, 5, 0)
-        scene.add_polyhedron("star", Cube(model, "gold"))
-        
-        # Snowflakes
-        model = Matrix()
-        model = model.scale(0.5, 0.5, 0.5)
-        rotationAxis = Vector(1, -1, 1)
-        rotationAxis.normalize()
-        model = model.rotate(rotationAxis, 10*time())
-        model = model.translate(-6, 5, 0)
-        scene.add_polyhedron("snow0", Tetrahedron(model, "cornflowerblue"))
-        
-        model = model.translate(12, 0, 0)
-        scene.add_polyhedron("snow1", Tetrahedron(model, "cornflowerblue"))
-        
-        model = model.translate(-6, -3, 3)
-        scene.add_polyhedron("snow2", Tetrahedron(model, "cornflowerblue"))
-        
-        model = model.translate(0, 6, -6)
-        scene.add_polyhedron("snow3", Tetrahedron(model, "cornflowerblue"))
-        
-        model = model.translate(-3, -12, 6)
-        scene.add_polyhedron("snow4", Tetrahedron(model, "cornflowerblue"))
+        cubePos -= deltaTime
+        model = model.translate(0,-5,cubePos)
+        scene.add_polyhedron("ground1", Cube(model, "gold"))
 
 
         # Update buffers
