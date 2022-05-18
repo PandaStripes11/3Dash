@@ -187,6 +187,8 @@ class Vector():
         length.
         """
         length = sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2) # Calculates length of vector (Pythagorean Theorem)
+        if length == 0:
+            return 0
         # Divide components by length
         self.arr[0] = self.x / length
         self.arr[1] = self.y / length
@@ -467,7 +469,8 @@ class Tetrahedron(Polyhedron):
 """ MATRICES """
 # View matrix (View space = camera view; transforms world coordinates to position of the "camera")
 view = Matrix()
-view = view.translate(0, -5, -20)
+view = view.translate(6,18,-10)
+view = view.rotate(Vector(0,1,0),45)
 
 # Perspective projection matrix (Clip space = projects 3D coordinates to 2D range from -1.0 to 1.0)
 projection = Matrix()
@@ -553,17 +556,19 @@ right_arrow = KeyState('Right')
 
 def processInput():
     global view
+
     if w_key.down:
         view = view.translate(0, 0, 0.1)
     if a_key.down:
-        view = view.translate(0.1, 0, 0)
+        view = view.translate(-cubeVelocity.z/120, 0, -cubeVelocity.z/120)
     if s_key.down:
         view = view.translate(0, 0, -0.1)
     if d_key.down:
         view = view.translate(-0.1, 0, 0)
 
     if space_key.down:
-        view = view.translate(0, -0.1, 0)
+        #view = view.translate(0, -0.1, 0)
+        if cubeVelocity.y == 0: cubeVelocity.y = 20
     if shift_key.down:
         view = view.translate(0, 0.1, 0)
 
@@ -580,15 +585,22 @@ def processInput():
 
 
 
+class GameObject():
+    pass
+
+
+
+
+cubePos = Vector(0,0,0)
+cubeVelocity = Vector(0,0,-5)
+
+
+
+
 """INITIALIZE SCENE"""
 scene = Scene()
 def init():
     global scene
-
-    # Ground
-    model = Matrix()
-    model = model.translate(0, -5, 0)
-    scene.add_polyhedron("ground1", Cube(model))
 
 init()
 """INITIALIZE SCENE"""
@@ -600,9 +612,13 @@ init()
 
 """ RENDER LOOP """
 def render(scene: object):
+    global view
+
     currFrame = None; prevFrame = time(); deltaTime = None
 
-    cubePos = 0
+    global cubeVelocity
+    global cubePos
+    groundHeight = -20
     while 0 == 0:
         currFrame = time()
         deltaTime = currFrame - prevFrame
@@ -610,12 +626,26 @@ def render(scene: object):
 
         processInput()
 
-        # Star
+        # Player
         model = Matrix()
-        cubePos -= deltaTime
-        model = model.translate(0,-5,cubePos)
-        scene.add_polyhedron("ground1", Cube(model, "gold"))
+        if cubePos.y >= groundHeight:
+           cubeVelocity.y -= 4*9.87*deltaTime
+           cubePos.y += cubeVelocity.y*deltaTime
+        elif not cubeVelocity.y > 0:
+            cubeVelocity.y = 0
+        deltaX = cubeVelocity.x*deltaTime; deltaY = cubeVelocity.y*deltaTime; deltaZ = cubeVelocity.z*deltaTime
+        cubePos.x += deltaX
+        cubePos.y += deltaY
+        cubePos.z += deltaZ
 
+        model = model.rotate(Vector(1,0,0), cubeVelocity.z*deltaTime)
+        model = model.translate(cubePos.x,cubePos.y,cubePos.z)
+
+        viewVector = Vector(-deltaZ*0.7071, 0, -deltaZ*0.7071)
+        print(viewVector.arr, [deltaX, deltaY, deltaZ])
+        view = view.translate(viewVector.x, viewVector.y, viewVector.z)
+
+        scene.add_polyhedron("player", Cube(model, "gold"))
 
         # Update buffers
         clear()

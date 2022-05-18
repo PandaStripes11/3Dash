@@ -1,24 +1,21 @@
-#FinalProject.py
+# FinalProject.py
+
+
 from Graphics import *
+from Setting import *
+from Robots import *
+from HomePage import *
 
-beginGrfx(1300, 700)
+beginGrfx(1300,700)
 
-
-def drawRobot():
-    headCenter = (450, 200)
-    # Head
-    fillCircle(headCenter[0], headCenter[1], 50)
-    # Body
-    fillOval(headCenter[0], headCenter[1]+150, 50, 75)
-    # Legs
-    # Arms
-    pass
+   
 
 
-"""
-MAIN
-"""
-drawRobot()
+   
+drawHomeBackground()
+onscreenclick(locate)    
+
+
 
 
 
