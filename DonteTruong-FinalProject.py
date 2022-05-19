@@ -469,7 +469,7 @@ class Tetrahedron(Polyhedron):
 """ MATRICES """
 # View matrix (View space = camera view; transforms world coordinates to position of the "camera")
 view = Matrix()
-view = view.translate(6,18,-10)
+view = view.translate(15,14,-25)
 view = view.rotate(Vector(0,1,0),45)
 
 # Perspective projection matrix (Clip space = projects 3D coordinates to 2D range from -1.0 to 1.0)
@@ -499,6 +499,11 @@ class Scene():
         self.polyhedrons = polyhedrons
         self.polyhedronsList = list(self.polyhedrons.values())
 
+        self.polygons = []
+        for polyhedron in self.polyhedrons:
+            for polygon in polyhedron.polygons:
+                self.polygons.append(polygon)
+
     def add_polyhedron(self, name: str, polyhedron: object):
         self.polyhedrons[name] = polyhedron
         self.polyhedronsList = list(self.polyhedrons.values())
@@ -506,7 +511,12 @@ class Scene():
     def draw(self):
         self.depth_sort()
         for polyhedron in self.polyhedronsList:
-            polyhedron.draw()
+            for polygon in polyhedron.polygons:
+                if type(polyhedron.color) == str:
+                    setColor(polyhedron.color)
+                elif type(polyhedron.color) == list:
+                    setColor(polyhedron.color[0], polyhedron.color[1], polyhedron.color[2]) 
+                polygon.draw(polyhedron.model)
     def depth_sort(self):
         #TODO: FIX DEPTH BUFFER TO DRAW BY INDIVIDUAL POLYGON ORDER
         zValues = []
@@ -519,6 +529,7 @@ class Scene():
         for zValue in zValues:
             newPolyhedrons.append(deepcopy(self.polyhedronsList[zValue[0]]))
         self.polyhedronsList = newPolyhedrons
+        
 # endregion
 
 
@@ -559,12 +570,14 @@ def processInput():
 
     if w_key.down:
         view = view.translate(0, 0, 0.1)
-    if a_key.down:
-        view = view.translate(-cubeVelocity.z/120, 0, -cubeVelocity.z/120)
+    if a_key.down and cubeVelocity.y == 0:
+        #view = view.translate(0.1, 0, 0)
+        cubeVelocity.x = -10
     if s_key.down:
         view = view.translate(0, 0, -0.1)
-    if d_key.down:
-        view = view.translate(-0.1, 0, 0)
+    if d_key.down and cubeVelocity.y == 0:
+        #view = view.translate(-0.1, 0, 0)
+        cubeVelocity.x = 10
 
     if space_key.down:
         #view = view.translate(0, -0.1, 0)
@@ -631,21 +644,27 @@ def render(scene: object):
         if cubePos.y >= groundHeight:
            cubeVelocity.y -= 4*9.87*deltaTime
            cubePos.y += cubeVelocity.y*deltaTime
+           model = model.rotate(Vector(1,0,0), cubeVelocity.z*deltaTime)
         elif not cubeVelocity.y > 0:
             cubeVelocity.y = 0
+        if cubePos.x <= -2 or cubePos.x >= 2:
+            if cubePos.x > 0: cubePos.x = 1.99 
+            else: cubePos.x = -1.99
+            print(cubePos.x)
+            cubeVelocity.x = 0
         deltaX = cubeVelocity.x*deltaTime; deltaY = cubeVelocity.y*deltaTime; deltaZ = cubeVelocity.z*deltaTime
         cubePos.x += deltaX
         cubePos.y += deltaY
         cubePos.z += deltaZ
 
-        model = model.rotate(Vector(1,0,0), cubeVelocity.z*deltaTime)
         model = model.translate(cubePos.x,cubePos.y,cubePos.z)
-
-        viewVector = Vector(-deltaZ*0.7071, 0, -deltaZ*0.7071)
-        print(viewVector.arr, [deltaX, deltaY, deltaZ])
-        view = view.translate(viewVector.x, viewVector.y, viewVector.z)
-
+        view = view.translate(-deltaZ*0.7071, 0, -deltaZ*0.7071)
         scene.add_polyhedron("player", Cube(model, "gold"))
+        
+        model = Matrix()
+        model = model.scale(4,0,20)
+        model = model.translate(0,-21,cubePos.z)
+        scene.add_polyhedron("ground", Cube(model))
 
         # Update buffers
         clear()
