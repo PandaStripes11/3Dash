@@ -507,6 +507,11 @@ class Scene():
     def add_polyhedron(self, name: str, polyhedron: object):
         self.polyhedrons[name] = polyhedron
         self.polyhedronsList = list(self.polyhedrons.values())
+    def remove_polyhedron(self, name: str):
+        if self.polyhedrons.get(name) is None:
+            return
+        del self.polyhedrons[name]
+        self.polyhedronsList = list(self.polyhedrons.values())
 
     def draw(self):
         self.depth_sort()
@@ -569,19 +574,25 @@ def processInput():
     global view
 
     if w_key.down:
-        view = view.translate(0, 0, 0.1)
-    if a_key.down and cubeVelocity.y == 0:
+        #view = view.translate(0, 0, 0.1)
+        cubeVelocity.z = -15
+    if a_key.down:
         #view = view.translate(0.1, 0, 0)
         cubeVelocity.x = -10
     if s_key.down:
-        view = view.translate(0, 0, -0.1)
-    if d_key.down and cubeVelocity.y == 0:
+        #view = view.translate(0, 0, -0.1)
+        cubeVelocity.z = -5
+    if d_key.down:
         #view = view.translate(-0.1, 0, 0)
         cubeVelocity.x = 10
+    if not a_key.down and not d_key.down:
+        cubeVelocity.x = 0
+    if not s_key.down and not w_key.down:
+        cubeVelocity.z = -10
 
     if space_key.down:
         #view = view.translate(0, -0.1, 0)
-        if cubeVelocity.y == 0: cubeVelocity.y = 20
+        if cubeVelocity.y == 0: cubeVelocity.y = 40
     if shift_key.down:
         view = view.translate(0, 0.1, 0)
 
@@ -599,7 +610,32 @@ def processInput():
 
 
 class GameObject():
-    pass
+    def __init__(
+        self, 
+        name: str,
+        shape: Polyhedron,
+        translate: Vector = Vector(0,0,0), 
+        rotate: list = [Vector(1,0,0), 0], 
+        scale: Vector = Vector(1,1,1)
+    ):
+        self.transform = {
+            translate: translate,
+            rotate: rotate,
+            scale: scale
+        }
+
+    def add_object(self):
+        model = Matrix()
+        if self.transform.scale.arr[:3] != [1,1,1]:     # Scale
+            model = model.scale(*self.transform.scale.arr[:3])
+        if self.transform.rotate[1] != 0:               # Rotate
+            model = model.rotate(self.transform.rotate[0].normalize(), self.transform.rotate[1])
+        if self.transform.translate.arr[:3] != [0,0,0]: # Translate
+            model = model.translate(*self.transform.translate.arr[:3])
+
+        global scene
+        self.shape.model = model
+        scene.add_polyhedron(self.name, self.shape)
 
 
 
@@ -614,6 +650,35 @@ cubeVelocity = Vector(0,0,-5)
 scene = Scene()
 def init():
     global scene
+
+    model = Matrix()
+    model = model.translate(-2,-20,-10)
+    scene.add_polyhedron("obstacle1a", Cube(model))
+    
+    model = Matrix()
+    model = model.scale(1,2,1)
+    model = model.translate(2,-19,-20)
+    scene.add_polyhedron("obstacle2a", Cube(model))
+
+    model = Matrix()
+    model = model.translate(0,-20,-30)
+    scene.add_polyhedron("obstacle3a", Cube(model))
+
+    model = Matrix()
+    model = model.scale(1,2,1)
+    model = model.translate(2,-19,-40)
+    scene.add_polyhedron("obstacle4a", Cube(model))
+
+    model = model.translate(-4,0,0)
+    scene.add_polyhedron("obstacle4b", Cube(model))
+
+    model = Matrix()
+    model = model.translate(2,-20,-60)
+    scene.add_polyhedron("obstacle6a", Tetrahedron(model))
+    model = model.translate(-2,0,0)
+    scene.add_polyhedron("obstacle6b", Tetrahedron(model))
+    model = model.translate(-2,0,0)
+    scene.add_polyhedron("obstacle6c", Tetrahedron(model))
 
 init()
 """INITIALIZE SCENE"""
@@ -632,6 +697,7 @@ def render(scene: object):
     global cubeVelocity
     global cubePos
     groundHeight = -20
+    obstacleNumber = 1
     while 0 == 0:
         currFrame = time()
         deltaTime = currFrame - prevFrame
@@ -641,20 +707,16 @@ def render(scene: object):
 
         # Player
         model = Matrix()
-        if cubePos.y >= groundHeight:
-           cubeVelocity.y -= 4*9.87*deltaTime
-           cubePos.y += cubeVelocity.y*deltaTime
-           model = model.rotate(Vector(1,0,0), cubeVelocity.z*deltaTime)
+        if cubePos.y > groundHeight:
+           cubeVelocity.y -= 10*9.87*deltaTime
         elif not cubeVelocity.y > 0:
             cubeVelocity.y = 0
-        if cubePos.x <= -2 or cubePos.x >= 2:
-            if cubePos.x > 0: cubePos.x = 1.99 
-            else: cubePos.x = -1.99
-            print(cubePos.x)
-            cubeVelocity.x = 0
+            cubePos.y = groundHeight
+        
         deltaX = cubeVelocity.x*deltaTime; deltaY = cubeVelocity.y*deltaTime; deltaZ = cubeVelocity.z*deltaTime
         cubePos.x += deltaX
         cubePos.y += deltaY
+        if cubePos.y < groundHeight: cubePos.y = groundHeight
         cubePos.z += deltaZ
 
         model = model.translate(cubePos.x,cubePos.y,cubePos.z)
@@ -662,10 +724,15 @@ def render(scene: object):
         scene.add_polyhedron("player", Cube(model, "gold"))
         
         model = Matrix()
-        model = model.scale(4,0,20)
+        model = model.scale(6,0,20)
         model = model.translate(0,-21,cubePos.z)
-        scene.add_polyhedron("ground", Cube(model))
+        #scene.add_polyhedron("ground", Cube(model))
 
+        if cubePos.z+30 < -obstacleNumber*10:
+            obstacleName = "obstacle"+str(obstacleNumber)
+            scene.remove_polyhedron(obstacleName+"a"); scene.remove_polyhedron(obstacleName+"b"); scene.remove_polyhedron(obstacleName+"c")
+            obstacleNumber += 1
+            
         # Update buffers
         clear()
         scene.draw()
