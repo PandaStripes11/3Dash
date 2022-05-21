@@ -609,6 +609,7 @@ def processInput():
 
 
 
+# region GameObject
 class GameObject():
     def __init__(
         self, 
@@ -636,6 +637,7 @@ class GameObject():
         global scene
         self.shape.model = model
         scene.add_polyhedron(self.name, self.shape)
+# endregion
 
 
 
@@ -684,7 +686,6 @@ init()
 """INITIALIZE SCENE"""
 
 
-# TODO: Change polyhedron model matrix to transform values
 # TODO: Create Game State
 # TODO: Create UI classes
 
