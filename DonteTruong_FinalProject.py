@@ -277,7 +277,7 @@ class Tetrahedron(Polyhedron):
 
 
 
-# region Camera
+# region Inputs
 """Event listener functions
 
 Reads input and modifies view matrix accordingly.
@@ -356,20 +356,22 @@ class GameObject():
         rotate: list = [Vector(1,0,0), 0], 
         scale: Vector = Vector(1,1,1)
     ):
+        self.name = name
+        self.shape = shape
         self.transform = {
-            translate: translate,
-            rotate: rotate,
-            scale: scale
+            "translate": translate,
+            "rotate": rotate,
+            "scale": scale
         }
 
-    def add_object(self):
+    def add(self):
         model = Matrix()
-        if self.transform.scale.arr[:3] != [1,1,1]:     # Scale
-            model = model.scale(*self.transform.scale.arr[:3])
-        if self.transform.rotate[1] != 0:               # Rotate
-            model = model.rotate(self.transform.rotate[0].normalize(), self.transform.rotate[1])
-        if self.transform.translate.arr[:3] != [0,0,0]: # Translate
-            model = model.translate(*self.transform.translate.arr[:3])
+        if self.transform["scale"].arr[:3] != [1,1,1]:     # Scale
+            model = model.scale(*self.transform["scale"].arr[:3])
+        if self.transform["rotate"][1] != 0:               # Rotate
+            model = model.rotate(self.transform["rotate"][0].normalize(), self.transform["rotate"][1])
+        if self.transform["translate"].arr[:3] != [0,0,0]: # Translate
+            model = model.translate(*self.transform["translate"].arr[:3])
 
         global scene
         self.shape.model = model
@@ -389,6 +391,9 @@ cubeVelocity = Vector(0,0,-5)
 scene = Scene()
 def init():
     global scene
+
+    testCube = GameObject("test", Cube(), translate=Vector(0,-20,-5))
+    testCube.add()
 
     model = Matrix()
     model = model.translate(-2,-20,-10)
