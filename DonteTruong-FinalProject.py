@@ -392,9 +392,6 @@ scene = Scene()
 def init():
     global scene
 
-    testCube = GameObject("test", Cube(), translate=Vector(0,-20,-5))
-    testCube.add()
-
     model = Matrix()
     model = model.translate(-2,-20,-10)
     scene.add_polyhedron("obstacle1a", Cube(model))
