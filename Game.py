@@ -420,17 +420,18 @@ class Obstacle(GameObject):
         isInside = self._inside()
         if isInside and playerPos.z >= self.transform["translate"].z+self.transform["scale"].z-0.5:
             playerVelocity.z = 0
-            playerPos.z = self.transform["translate"].z + self.transform["scale"].z+1
+            playerPos.z = self.transform["translate"].z + self.transform["scale"].z + 1
         elif isInside and playerVelocity.y < 0:
             playerVelocity.y = 0
             playerPos.y = self.transform["translate"].y + self.transform["scale"].y + 1
         elif isInside and playerVelocity.y > 0:
             playerVelocity.y = 0
-            playerPos.y = self.transform["translate"].y - self.transform["scale"].y -1
+            playerPos.y = self.transform["translate"].y - self.transform["scale"].y - 1
         elif isInside and playerPos.z <= self.transform["translate"].z+self.transform["scale"].z+1 and playerVelocity.x != 0:
             if playerVelocity.x > 0: playerPos.x = self.transform["translate"].x - self.transform["scale"].x - 1
             else: playerPos.x = self.transform["translate"].x + self.transform["scale"].x + 1
             playerVelocity.x = 0
+        gameObjects[0].add()
 # endregion
 
 
@@ -644,16 +645,17 @@ level4 = [
     Obstacle("obstacle3", translate=Vector(0,-16,-75), scale=Vector(3,1,3)),
     Obstacle("obstacle4", translate=Vector(0,-16,-90), scale=Vector(3,1,3)),
     Obstacle("obstacle5", translate=Vector(0,-16,-105), scale=Vector(3,1,3)),
-    Spike("spike1", translate=Vector(2,-14,-112)),
-    Spike("spike2", translate=Vector(0,-14,-112)),
-    Spike("spike3", translate=Vector(-2,-14,-112)), 
-    Obstacle("obstacle6", translate=Vector(0,-16,-120), scale=Vector(3,1,3)),
+    Obstacle("obstacle6", translate=Vector(0,-16,-112), scale=Vector(3,4,1)),
+    Spike("spike1", translate=Vector(2,-12,-112)),
+    Spike("spike2", translate=Vector(0,-12,-112)),
+    Spike("spike3", translate=Vector(-2,-12,-112)), 
+    Obstacle("obstacle7", translate=Vector(0,-16,-120), scale=Vector(3,1,3)),
 
     Spike("spike4", translate=Vector(2,-20,-110)),
     Spike("spike5", translate=Vector(0,-20,-110)),
     Spike("spike6", translate=Vector(-2,-20,-110)), 
 
-    Finish("finish", translate=Vector(0,-10,-125), scale=(Vector(3,3,1)))
+    Finish("finish", translate=Vector(0,-8,-125), scale=(Vector(3,3,1)))
 ]
 # endregion
 

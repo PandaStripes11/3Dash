@@ -8,13 +8,13 @@ from copy import deepcopy
 from threading import Thread
 import winsound
 def play_music():
-    winsound.PlaySound("Kahoot.wav", winsound.SND_FILENAME)
+    winsound.PlaySound("Kahoot.wav", winsound.SND_LOOP + winsound.SND_ASYNC)
 
 def drawHomeBackground():
    thread = Thread(target=play_music)
    thread.start()
-   setBackground("blue")
-   setColor("yellow") #stars
+   setBackground("cornflowerblue")
+   setColor("gold") #stars
    for k in range(100):
       x = randint(0,1300)
       y = randint(0,700)
@@ -29,17 +29,17 @@ def drawHomeBackground():
 def drawBackButton():
    setColor("white")
    fillRectangle(50,25,175,75) #back button
-   setColor("blue")
+   setColor("cornflowerblue")
    drawString("<= Back" ,62.5,65,"Arial",20)
 
 def drawSkinsButton():
    setColor("white")
    fillRectangle(25,500,225,650) #skins button
-   setColor("blue")
+   setColor("cornflowerblue")
    drawString("Skins",45,600,"Arial",45, "bold") 
 
 def drawSkinPage():
-   setColor("green")
+   setColor("slateblue")
    fillRectangle(0,0,1300,700)
    enterSkinColor()
 
@@ -54,7 +54,7 @@ def enterSkinColor():
 def drawQuestionsButton():
    setColor("white")
    fillRectangle(1050,500,1250,650) #questions button
-   setColor("blue")
+   setColor("cornflowerblue")
    drawString("?",1125,625,"Arial",60, "bold")
 
 def drawQuestionPage():
@@ -85,11 +85,11 @@ def drawQuestionPage():
 def drawBackgroundColorsButton():   
    setColor("white")
    fillRectangle(425,500,850,650) #background button
-   setColor("blue")
+   setColor("cornflowerblue")
    drawString("Backgrounds",447,600,"Arial",45,"bold") 
    
 def drawBackgroundColorPage():
-   setColor("orange")
+   setColor("slateblue")
    fillRectangle(0,0,1300,700)
    enterBackgroundColor()
 
@@ -106,8 +106,10 @@ def enterBackgroundColor():
    drawHomeBackground()
 
 levelsMenuIsActive = False
+completedLevels = [False]*8
 def locate(x,y):
    global levelsMenuIsActive
+   global completedLevels
    if inside(x,y,25,500,225,650): #skin page
       clear()
       drawSkinPage()  
@@ -124,7 +126,7 @@ def locate(x,y):
       drawHomeBackground()
    elif inside(x,y,475,350,800,450): #play
       clear()
-      drawLevels() 
+      drawLevels(completedLevels) 
       drawBackButton()
       levelsMenuIsActive = True
    elif inside(x,y,100,100,300,300) and levelsMenuIsActive:
@@ -137,10 +139,12 @@ def locate(x,y):
       drawLevel(4)
 
 def drawLevel(level = 1):
+   global completedLevels
    clear()
    render(level=level, playerColor=deepcopy(cubeColor), floorColor=deepcopy(floorColor), backgroundColor=deepcopy(backgroundColor))
    clear()
-   drawLevels()
+   completedLevels[level-1] = True
+   drawLevels(completedLevels)
    drawBackButton()
 
 onscreenclick(locate)
