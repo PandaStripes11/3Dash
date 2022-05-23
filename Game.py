@@ -418,7 +418,7 @@ class Obstacle(GameObject):
         playerVelocity = gameObjects[0].velocity
 
         isInside = self._inside()
-        if isInside and playerPos.z >= self.transform["translate"].z+self.transform["scale"].z-0.5:
+        if isInside and playerPos.z >= self.transform["translate"].z+self.transform["scale"].z-1:
             playerVelocity.z = 0
             playerPos.z = self.transform["translate"].z + self.transform["scale"].z + 1
         elif isInside and playerVelocity.y < 0:
