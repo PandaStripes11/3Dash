@@ -3,6 +3,7 @@
 from Graphics import *
 from LevelsMenu import *
 from Game import *
+from copy import deepcopy
 
 from threading import Thread
 import winsound
@@ -137,7 +138,7 @@ def locate(x,y):
 
 def drawLevel(level = 1):
    clear()
-   render(level=level, playerColor=cubeColor, floorColor=floorColor, backgroundColor=backgroundColor,)
+   render(level=level, playerColor=deepcopy(cubeColor), floorColor=deepcopy(floorColor), backgroundColor=deepcopy(backgroundColor))
    clear()
    drawLevels()
    drawBackButton()

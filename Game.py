@@ -304,10 +304,13 @@ down_arrow = KeyState('Down')
 right_arrow = KeyState('Right')
 
 def processInput():
+    global gameObjects
+    global w_key, a_key, s_key, d_key, e_key, space_key, shift_key
     global view
     if w_key.down:
         #view = view.translate(0, 0, 0.1)
         gameObjects[0].velocity.z = -20
+        print(id(gameObjects[0]), gameObjects[0].velocity.z, "w")
     if a_key.down:
         #view = view.translate(0.1, 0, 0)
         gameObjects[0].velocity.x = -10
@@ -679,10 +682,10 @@ def init(level = 1):
 
 """ RENDER LOOP """
 def render(
+    playerColor, 
+    floorColor,
+    backgroundColor,
     level = 1, 
-    playerColor = "cornflowerblue", 
-    floorColor = "lightslategray",
-    backgroundColor = "white"
 ):
     beginGrfx(SCR_WIDTH, SCR_HEIGHT) # Viewport dimensions
 
@@ -701,6 +704,7 @@ def render(
         deltaTime = currFrame - prevFrame
         prevFrame = time()
 
+        listen()
         processInput()
 
         for gameObject in gameObjects:
