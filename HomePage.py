@@ -61,26 +61,38 @@ def drawQuestionPage():
    setColor("purple")
    fillRectangle(0,0,1300,700)
    setColor("white")
-   drawString("Controls",450,200,"Arial",70)
+   drawString("Controls",150,200,"Arial",70)
    drawBackButton()
    y = 200
    sideLength = 50
-   buttons = ["w", "a", "d", "space"]
-   for k in range(4):
-      y += sideLength + 10
+   buttons = ["w", "a", "d", "space", "s"]
+   for k in range(5):
+      if k == 3: 
+         setColor("white")
+         fillRegularPolygon(675,255,sideLength,4)
+         fillRegularPolygon(740,255,sideLength,4)
+         setColor("black")
+         drawString(buttons[3],650,280,"Arial",32,"bold")
+      if k == 4:
+         setColor("white")
+         fillRegularPolygon(675,370,sideLength,4)
+         setColor("black")
+         drawString(buttons[k],665,390,"Arial",32,"bold")
+   for k in range(3):
+      y += sideLength + 5
       setColor("white")
-      fillRegularPolygon(500,y,sideLength,4)
-      if k == 3: fillRectangle(480,y+23,625,y-36)
+      fillRegularPolygon(150,y,sideLength,4)
       setColor("black")
-      drawString(buttons[k],487,y+17,"Arial", 32, "bold")
+      drawString(buttons[k],140,y+20,"Arial", 32, "bold")
       setColor("purple")
       y += sideLength + 10
       fillRegularPolygon(500,y,sideLength,4)
    setColor("white")
-   drawString("moves forward",600,280,"Arial",35)
-   drawString("moves left",600,400,"Arial",35)
-   drawString("moves right",600,520,"Arial",35)
-   drawString("jumps",675,640,"Arial",35)
+   drawString("moves forward",200,280,"Arial",35)
+   drawString("moves left",200,400,"Arial",35)
+   drawString("moves right",200,520,"Arial",35)
+   drawString("jumps",800,280,"Arial",35)
+   drawString("hold to reset",720,395,"Arial",35)
       
 def drawBackgroundColorsButton():   
    setColor("white")
@@ -145,6 +157,8 @@ def locate(x,y):
          drawLevel(6)
       elif inside(x,y,700,400,900,600):
          drawLevel(7)
+      elif inside(x,y,1000,400,1200,600):
+         drawLevel(8)
 
 def drawLevel(level = 1):
    global completedLevels

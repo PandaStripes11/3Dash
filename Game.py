@@ -712,6 +712,10 @@ level7 = [
 
     Finish("finish", translate=Vector(0,-4,-125), scale=(Vector(3,3,1)))
 ]
+level8 = [
+    Player("player", velocity=Vector(0,0,-15), translate=Vector(0,0,0)),
+    Finish("finish", translate=Vector(0,-20,-500), scale=(Vector(1,1,1)))
+]
 # endregion
 
 
@@ -731,6 +735,7 @@ def init(level = 1):
     elif level == 5: gameObjects = deepcopy(level5)
     elif level == 6: gameObjects = deepcopy(level6)
     elif level == 7: gameObjects = deepcopy(level7)
+    elif level == 8: gameObjects = deepcopy(level8)
     else: gameObjects = deepcopy(level1)
 
     for gameObject in gameObjects:
