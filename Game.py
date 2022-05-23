@@ -307,7 +307,6 @@ right_arrow = KeyState('Right')
 
 def processInput():
     global view
-
     if w_key.down:
         #view = view.translate(0, 0, 0.1)
         gameObjects[0].velocity.z = -20
@@ -577,6 +576,7 @@ class Player(GameObject):
 
 
 
+# region Levels
 gameObjects = []
 level1 = [
     Player("player", velocity=Vector(0,0,-15), translate=Vector(0,0,0)),
@@ -616,6 +616,7 @@ level2 = [
 
     Finish("finish", translate=Vector(0,-18,-120), scale=(Vector(3,3,1)))
 ]
+# endregion
 
 
 
@@ -627,7 +628,7 @@ def init(level = 1):
         
     global gameObjects
     if level == 1: gameObjects = deepcopy(level1)
-    if level == 2: gameObjects = deepcopy(level2)
+    elif level == 2: gameObjects = deepcopy(level2)
     else: gameObjects = deepcopy(level1)
 
     for gameObject in gameObjects:
