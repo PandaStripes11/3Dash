@@ -86,7 +86,7 @@ def drawBackgroundColorPage():
    enterBackgroundColor()
 
 backgroundColor = "white"
-floorColor = "grey"
+floorColor = "lightslategray"
 
 def enterBackgroundColor():
    global backgroundColor
@@ -120,35 +120,17 @@ def locate(x,y):
       drawBackButton()
       levelsMenuIsActive = True
    elif inside(x,y,100,100,300,300) and levelsMenuIsActive:
-      drawLevel1()
+      drawLevel(1)
    elif inside(x,y,400,100,600,300) and levelsMenuIsActive:
-      drawLevel2()
+      drawLevel(2)
    elif inside(x,y,700,100,900,300) and levelsMenuIsActive:
-      drawLevel3()
+      drawLevel()
    elif inside(x,y,1000,100,1200,300) and levelsMenuIsActive:
-      drawLevel4()
+      drawLevel()
 
-def drawLevel1():
+def drawLevel(level = 1):
    clear()
-   render(scene, cubeColor)
-   clear()
-   drawLevels()
-   drawBackButton()
-def drawLevel2():
-   clear()
-   render(scene, cubeColor)
-   clear()
-   drawLevels()
-   drawBackButton()
-def drawLevel3():
-   clear()
-   render(scene, cubeColor)
-   clear()
-   drawLevels()
-   drawBackButton()
-def drawLevel4():
-   clear()
-   render(scene, cubeColor)
+   render(scene,  level=level, playerColor=cubeColor, floorColor=floorColor, backgroundColor=backgroundColor,)
    clear()
    drawLevels()
    drawBackButton()

@@ -565,7 +565,7 @@ class Player(GameObject):
         
         global view
         view = Matrix()
-        view = view.translate(15,14,-25)
+        view = view.translate(15,14,-9)
         view = view.rotate(Vector(0,1,0),45)
 
         self.transform["translate"] = Vector(0,0,0)
@@ -577,8 +577,9 @@ class Player(GameObject):
 
 
 
-gameObjects = [
-    Player("player", velocity=Vector(0,0,-15)),
+gameObjects = []
+level1 = [
+    Player("player", velocity=Vector(0,0,-15), translate=Vector(0,0,0)),
 
     Obstacle("obstacle1a", translate=Vector(-2,-20,-20)),
     Obstacle("obstacle2a", translate=Vector(2,-19,-30), scale=Vector(1,2,1)),
@@ -592,31 +593,67 @@ gameObjects = [
 
     Finish("finish", translate=Vector(0,-18,-100), scale=(Vector(3,3,1)))
 ]
+level2 = [
+    Player("player", velocity=Vector(0,0,-15), translate=Vector(0,0,0)),
+
+    Spike("obstacle1a", translate=Vector(2,-20,-20)),
+    Spike("obstacle1b", translate=Vector(0,-20,-20)),
+    Spike("obstacle1c", translate=Vector(-2,-20,-20)), 
+
+    Obstacle("obstacle2b", translate=Vector(0,-20,-30), scale=Vector(3,1,1)), 
+
+    Spike("obstacle3a", translate=Vector(2,-18.9,-30)),
+    Spike("obstacle3b", translate=Vector(0,-18.9,-30)),
+    Spike("obstacle3c", translate=Vector(-2,-18.9,-30)), 
+
+    Obstacle("obstacle4b", translate=Vector(0,-18,-45), scale=Vector(3,3,1)),
+
+    Obstacle("obstacle5b", translate=Vector(0,-18,-60), scale=Vector(3,3,1)),
+
+    Obstacle("obstacle6b", translate=Vector(0,-18,-80), scale=Vector(3,3,1)),
+
+    Obstacle("obstacle7b", translate=Vector(0,-18,-100), scale=Vector(3,3,1)),
+
+    Finish("finish", translate=Vector(0,-18,-120), scale=(Vector(3,3,1)))
+]
 
 
 
 
 """INITIALIZE SCENE"""
 scene = Scene()
-def init():
+def init(level = 1):
     global scene
+        
+    global gameObjects
+    if level == 1: gameObjects = deepcopy(level1)
+    if level == 2: gameObjects = deepcopy(level2)
+    else: gameObjects = deepcopy(level1)
 
     for gameObject in gameObjects:
         gameObject.add()
-
-init()
 """INITIALIZE SCENE"""
 
 
 
 
 """ RENDER LOOP """
-def render(scene: object, playerColor = "cornflowerblue"):
+def render(
+    scene: object, 
+    level = 1, 
+    playerColor = "cornflowerblue", 
+    floorColor = "lightslategray",
+    backgroundColor = "white"
+):
     beginGrfx(SCR_WIDTH, SCR_HEIGHT) # Viewport dimensions
 
+    init(level)
     if playerColor: gameObjects[0].shape.color = playerColor
 
     global view
+    view = Matrix()
+    view = view.translate(15,14,-15)
+    view = view.rotate(Vector(0,1,0),45)
     currFrame = None; prevFrame = time(); deltaTime = None; ended = False
 
     while 0 == 0:
@@ -635,10 +672,11 @@ def render(scene: object, playerColor = "cornflowerblue"):
         if gameObjects[0].finished: 
             if not ended: 
                 clear()
+                setColor(backgroundColor); fillRectangle(0,0,SCR_WIDTH,SCR_HEIGHT)
                 model = Matrix()
                 model = model.scale(3,0,41)
                 model = model.translate(-2,-20,gameObjects[0].viewPos+35)
-                Cube(model,"lightslategray").draw() # Ground
+                Cube(model,floorColor).draw() # Ground
                 scene.draw()
             ended = True
             drawTitle("Level Complete!")
@@ -647,13 +685,13 @@ def render(scene: object, playerColor = "cornflowerblue"):
             if e_key.down: return
         else:
             clear()
+            setColor(backgroundColor); fillRectangle(0,0,SCR_WIDTH,SCR_HEIGHT)
             model = Matrix()
             model = model.scale(3,0,41)
             model = model.translate(-2,-20,gameObjects[0].viewPos+35)
-            Cube(model,"lightslategray").draw() # Ground
+            Cube(model,floorColor).draw() # Ground
             scene.draw()
         update()
-
     endGrfx()
 """ RENDER LOOP """
 
