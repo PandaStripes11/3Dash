@@ -10,8 +10,6 @@ from CoordinateSpaceMatrices import *
 from Scene import Scene
 
 
-
-
 # region Polygon
 class Polygon():
     def __init__(self, coordinates: list, model: object = None) -> None:

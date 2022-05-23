@@ -4,7 +4,14 @@ from Graphics import *
 from LevelsMenu import *
 from Game import *
 
+from threading import Thread
+import winsound
+def play_music():
+    winsound.PlaySound("Kahoot.wav", winsound.SND_FILENAME)
+
 def drawHomeBackground():
+   thread = Thread(target=play_music)
+   thread.start()
    setBackground("blue")
    setColor("yellow") #stars
    for k in range(100):
