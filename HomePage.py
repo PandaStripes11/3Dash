@@ -125,6 +125,7 @@ def locate(x,y):
    if inside(x,y,50,25,175,75): #back
       clear()
       drawHomeBackground()
+      levelsMenuIsActive = False
    if not levelsMenuIsActive:
       if inside(x,y,25,500,225,650): #skin page
          clear()
