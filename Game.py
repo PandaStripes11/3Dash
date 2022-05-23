@@ -678,6 +678,40 @@ level5 = [
 
     Finish("finish", translate=Vector(0,-8,-125), scale=(Vector(3,3,1)))
 ]
+level6 = [
+    Player("player", velocity=Vector(0,0,-15), translate=Vector(0,0,0)),
+
+    Obstacle("obstacle1", translate=Vector(0,-16,-45), scale=Vector(3,1,10)),
+
+    Spike("obstacle2", translate=Vector(1,-20,-60)),
+    Spike("obstacle3", translate=Vector(-1,-20,-60)),
+    Spike("obstacle4", translate=Vector(-3,-20,-60)),
+
+    Obstacle("obstacle5", translate=Vector(0,-16,-75), scale=Vector(3,1,10)),
+    Obstacle("obstacle6", translate=Vector(0,-12,-105), scale=Vector(3,1,10)),
+
+    Spike("obstacle7", translate=Vector(1,-20,-130)),
+    Spike("obstacle8", translate=Vector(-1,-20,-130)),
+    Spike("obstacle9", translate=Vector(-3,-20,-130)),
+
+    Finish("finish", translate=Vector(0,-4,-125), scale=(Vector(3,3,1)))
+]
+level7 = [
+    Player("player", velocity=Vector(0,0,-15), translate=Vector(0,0,0)),
+
+    Obstacle("obstacle1", translate=Vector(0,-18,-45)),
+    Obstacle("obstacle2", translate=Vector(0,-16,-60)),
+    Obstacle("obstacle3", translate=Vector(0,-14,-75)),
+    Obstacle("obstacle4", translate=Vector(0,-12,-90)),
+    Obstacle("obstacle5", translate=Vector(0,-10,-105)),
+    Obstacle("obstacle6", translate=Vector(0,-8,-120)),
+
+    Spike("obstacle7", translate=Vector(1,-20,-150)),
+    Spike("obstacle8", translate=Vector(-1,-20,-150)),
+    Spike("obstacle9", translate=Vector(-3,-20,-150)),
+
+    Finish("finish", translate=Vector(0,-4,-125), scale=(Vector(3,3,1)))
+]
 # endregion
 
 
@@ -695,6 +729,8 @@ def init(level = 1):
     elif level == 3: gameObjects = deepcopy(level3)
     elif level == 4: gameObjects = deepcopy(level4)
     elif level == 5: gameObjects = deepcopy(level5)
+    elif level == 6: gameObjects = deepcopy(level6)
+    elif level == 7: gameObjects = deepcopy(level7)
     else: gameObjects = deepcopy(level1)
 
     for gameObject in gameObjects:
