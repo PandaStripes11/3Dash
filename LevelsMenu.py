@@ -27,6 +27,6 @@ def drawLevels(completedLevels):
       if completedLevels[index]:
          setColor("mediumseagreen")
          drawString("✔", position, 285, "Arial", 120, "bold")
-      elif completedLevels[index+4]:
+      if completedLevels[index+4]:
          setColor("mediumseagreen")
          drawString("✔", position, 585, "Arial", 120, "bold")
