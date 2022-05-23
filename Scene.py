@@ -27,6 +27,9 @@ class Scene():
             return
         del self.polyhedrons[name]
         self.polyhedronsList = list(self.polyhedrons.values())
+    def remove_all(self):
+        for key in self.polyhedrons.keys():
+            self.remove_polyhedron(key)
 
     def draw(self):
         self.depth_sort()

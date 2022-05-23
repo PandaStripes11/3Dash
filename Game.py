@@ -585,35 +585,35 @@ gameObjects = []
 level1 = [
     Player("player", velocity=Vector(0,0,-15), translate=Vector(0,0,0)),
 
-    Obstacle("obstacle1a", translate=Vector(-2,-20,-20)),
-    Obstacle("obstacle2a", translate=Vector(2,-19,-30), scale=Vector(1,2,1)),
-    Obstacle("obstacle3a", translate=Vector(0,-20,-40)),
-    Obstacle("obstacle4a", translate=Vector(2.5,-19,-50), scale=Vector(1,2,1)),
-    Obstacle("obstacle4b", translate=Vector(-2.5,-19,-50), scale=Vector(1,2,1)),
+    Obstacle("obstacle1", translate=Vector(-2,-20,-20)),
+    Obstacle("obstacle2", translate=Vector(2,-19,-30), scale=Vector(1,2,1)),
+    Obstacle("obstacle3", translate=Vector(0,-20,-40)),
+    Obstacle("obstacle4", translate=Vector(2.5,-19,-50), scale=Vector(1,2,1)),
+    Obstacle("obstacle5", translate=Vector(-2.5,-19,-50), scale=Vector(1,2,1)),
 
-    Spike("obstacle6a", translate=Vector(2,-20,-70)),
-    Spike("obstacle6b", translate=Vector(0,-20,-70)),
-    Spike("obstacle6c", translate=Vector(-2,-20,-70)), 
+    Spike("obstacle6", translate=Vector(2,-20,-70)),
+    Spike("obstacle7", translate=Vector(0,-20,-70)),
+    Spike("obstacle8", translate=Vector(-2,-20,-70)), 
 
     Finish("finish", translate=Vector(0,-18,-100), scale=(Vector(3,3,1)))
 ]
 level2 = [
     Player("player", velocity=Vector(0,0,-15), translate=Vector(0,0,0)),
 
-    Spike("obstacle1a", translate=Vector(2,-20,-20)),
-    Spike("obstacle1b", translate=Vector(0,-20,-20)),
-    Spike("obstacle1c", translate=Vector(-2,-20,-20)), 
+    Spike("obstacle1", translate=Vector(2,-20,-20)),
+    Spike("obstacle2", translate=Vector(0,-20,-20)),
+    Spike("obstacle3", translate=Vector(-2,-20,-20)), 
 
-    Obstacle("obstacle2b", translate=Vector(0,-20,-30), scale=Vector(3,1,1)), 
+    Obstacle("obstacle4", translate=Vector(0,-20,-30), scale=Vector(3,1,1)), 
 
-    Spike("obstacle3a", translate=Vector(2,-18.9,-30)),
-    Spike("obstacle3b", translate=Vector(0,-18.9,-30)),
-    Spike("obstacle3c", translate=Vector(-2,-18.9,-30)), 
+    Spike("obstacle5", translate=Vector(2,-18.9,-30)),
+    Spike("obstacle6", translate=Vector(0,-18.9,-30)),
+    Spike("obstacle7", translate=Vector(-2,-18.9,-30)), 
 
-    Obstacle("obstacle4b", translate=Vector(0,-18,-45), scale=Vector(3,3,1)),
-    Obstacle("obstacle5b", translate=Vector(0,-18,-60), scale=Vector(3,3,1)),
-    Obstacle("obstacle6b", translate=Vector(0,-18,-80), scale=Vector(3,3,1)),
-    Obstacle("obstacle7b", translate=Vector(0,-18,-100), scale=Vector(3,3,1)),
+    Obstacle("obstacle8", translate=Vector(0,-18,-45), scale=Vector(3,3,1)),
+    Obstacle("obstacle9", translate=Vector(0,-18,-60), scale=Vector(3,3,1)),
+    Obstacle("obstacle10", translate=Vector(0,-18,-80), scale=Vector(3,3,1)),
+    Obstacle("obstacle11", translate=Vector(0,-18,-100), scale=Vector(3,3,1)),
 
     Finish("finish", translate=Vector(0,-18,-120), scale=(Vector(3,3,1)))
 ]
@@ -627,33 +627,33 @@ level3 = [
     Obstacle("obstacle5", translate=Vector(0,-16,-105), scale=Vector(3,1,3)),
     Obstacle("obstacle6", translate=Vector(0,-16,-120), scale=Vector(3,1,3)),
 
-    Spike("obstacle1a", translate=Vector(2,-20,-110)),
-    Spike("obstacle1b", translate=Vector(0,-20,-110)),
-    Spike("obstacle1c", translate=Vector(-2,-20,-110)), 
+    Spike("obstacle7", translate=Vector(2,-20,-110)),
+    Spike("obstacle8", translate=Vector(0,-20,-110)),
+    Spike("obstacle9", translate=Vector(-2,-20,-110)), 
 
     Finish("finish", translate=Vector(0,-10,-125), scale=(Vector(3,3,1)))
 ]
 level4 = [
     Player("player", velocity=Vector(0,0,-15), translate=Vector(0,0,0)),
 
-    Spike("spike1a", translate=Vector(2,-20,-20)),
-    Spike("spike1b", translate=Vector(0,-20,-20)),
-    Spike("spike1c", translate=Vector(-2,-20,-20)), 
+    Spike("obstacle1", translate=Vector(2,-20,-20)),
+    Spike("obstacle2", translate=Vector(0,-20,-20)),
+    Spike("obstacle3", translate=Vector(-2,-20,-20)), 
 
-    Obstacle("obstacle1", translate=Vector(0,-20,-45), scale=Vector(3,1,3)),
-    Obstacle("obstacle2", translate=Vector(0,-18,-60), scale=Vector(3,1,3)),
-    Obstacle("obstacle3", translate=Vector(0,-16,-75), scale=Vector(3,1,3)),
-    Obstacle("obstacle4", translate=Vector(0,-16,-90), scale=Vector(3,1,3)),
-    Obstacle("obstacle5", translate=Vector(0,-16,-105), scale=Vector(3,1,3)),
-    Obstacle("obstacle6", translate=Vector(0,-16,-112), scale=Vector(3,4,1)),
-    Spike("spike1", translate=Vector(2,-12,-112)),
-    Spike("spike2", translate=Vector(0,-12,-112)),
-    Spike("spike3", translate=Vector(-2,-12,-112)), 
-    Obstacle("obstacle7", translate=Vector(0,-16,-120), scale=Vector(3,1,3)),
+    Obstacle("obstacle4", translate=Vector(0,-20,-45), scale=Vector(3,1,3)),
+    Obstacle("obstacle5", translate=Vector(0,-18,-60), scale=Vector(3,1,3)),
+    Obstacle("obstacle6", translate=Vector(0,-16,-75), scale=Vector(3,1,3)),
+    Obstacle("obstacle7", translate=Vector(0,-16,-90), scale=Vector(3,1,3)),
+    Obstacle("obstacle8", translate=Vector(0,-16,-105), scale=Vector(3,1,3)),
+    Obstacle("obstacle9", translate=Vector(0,-16,-112), scale=Vector(3,4,1)),
+    Spike("obstacle10", translate=Vector(2,-12,-112)),
+    Spike("obstacle11", translate=Vector(0,-12,-112)),
+    Spike("obstacle12", translate=Vector(-2,-12,-112)), 
+    Obstacle("obstacle13", translate=Vector(0,-16,-120), scale=Vector(3,1,3)),
 
-    Spike("spike4", translate=Vector(2,-20,-110)),
-    Spike("spike5", translate=Vector(0,-20,-110)),
-    Spike("spike6", translate=Vector(-2,-20,-110)), 
+    Spike("obstacle14", translate=Vector(2,-20,-110)),
+    Spike("obstacle15", translate=Vector(0,-20,-110)),
+    Spike("obstacle16", translate=Vector(-2,-20,-110)), 
 
     Finish("finish", translate=Vector(0,-8,-125), scale=(Vector(3,3,1)))
 ]
@@ -663,9 +663,10 @@ level4 = [
 
 
 """INITIALIZE SCENE"""
-scene = Scene()
+scene = None
 def init(level = 1):
     global scene
+    scene = Scene()
         
     global gameObjects
     if level == 1: gameObjects = deepcopy(level1)
@@ -737,7 +738,7 @@ def render(
             Cube(model,floorColor).draw() # Ground
             scene.draw()
         update()
-    scene = Scene()
+    scene.remove_all()
 """ RENDER LOOP """
 
 
