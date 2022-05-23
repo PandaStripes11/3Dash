@@ -381,6 +381,77 @@ class GameObject():
 
 
 
+# region Obstacle
+class Obstacle(GameObject):
+    def __init__(self, name: str, translate: Vector = Vector(0, 0, 0), rotate: list = [Vector(1, 0, 0), 0], scale: Vector = Vector(1, 1, 1)):
+        super().__init__(name, Cube(), translate, rotate, scale)
+    def _inside(self, cubePos):
+        obstaclePos = self.transform["translate"]
+        obstacleScale = self.transform["scale"]
+        obstacleMin = Vector(obstaclePos.x - 1*obstacleScale.x, obstaclePos.y - 1*obstacleScale.y, obstaclePos.z - 1*obstacleScale.z)
+        obstacleMax = Vector(obstaclePos.x + 1*obstacleScale.x, obstaclePos.y + 1*obstacleScale.y, obstaclePos.z + 1*obstacleScale.z)
+
+        cubeMin = Vector(cubePos.x-1, cubePos.y-1, cubePos.z-1)
+        cubeMax = Vector(cubePos.x+1, cubePos.y+1, cubePos.z+1)
+        
+        return (
+            (obstacleMin.x < cubeMax.x and obstacleMax.x > cubeMin.x) and
+            (obstacleMin.y < cubeMax.y and obstacleMax.y > cubeMin.y) and
+            (obstacleMin.z < cubeMax.z and obstacleMax.z > cubeMin.z)
+        )
+    def update(self):
+        global scene
+        if cubePos.z+30 <= self.transform["translate"].z:
+            scene.remove_polyhedron(self.name)
+
+        isInside = self._inside(cubePos)
+        if isInside and cubePos.z >= self.transform["translate"].z+1:
+            cubeVelocity.z = 0
+            cubePos.z = self.transform["translate"].z + 2
+        elif isInside and cubeVelocity.y < 0:
+            cubeVelocity.y = 0
+            cubePos.y = self.transform["translate"].y + self.transform["scale"].y + 1
+        elif isInside and cubePos.z <= self.transform["translate"].z+2 and cubeVelocity.x != 0:
+            if cubeVelocity.x > 0: cubePos.x = self.transform["translate"].x - 2
+            else: cubePos.x = self.transform["translate"].x + 2
+            cubeVelocity.x = 0
+# endregion
+
+
+
+
+# region Spike
+class Spike(GameObject):
+    def __init__(self, name: str, translate: Vector = Vector(0, 0, 0), rotate: list = [Vector(1, 0, 0), 0], scale: Vector = Vector(1, 1, 1)):
+        super().__init__(name, Tetrahedron(color="red"), translate, rotate, scale)
+    def _inside(self):
+        pass
+    def update(self):
+        if self._inside():
+            # Kill cube
+            pass
+# endregion
+
+
+
+
+# region Player
+class Player(GameObject):
+    def __init__(self, name: str, translate: Vector = Vector(0, 0, 0), rotate: list = [Vector(1, 0, 0), 0], scale: Vector = Vector(1, 1, 1)):
+        super().__init__(name, Cube(color="gold"), translate, rotate, scale)
+# endregion
+
+
+
+
+gameObjects = [
+    Obstacle("obstacle1a", translate=Vector(-2,-20,-10)),
+    Obstacle("obstacle2a", translate=Vector(2,-19,-20), scale=Vector(1,2,1)),
+    Obstacle("obstacle3a", translate=Vector(0,-20,-30)),
+    Obstacle("obstacle4a", translate=Vector(2.5,-19,-40), scale=Vector(1,2,1)),
+    Obstacle("obstacle4b", translate=Vector(-2.5,-19,-40), scale=Vector(1,2,1))
+]
+
 cubePos = Vector(0,0,0)
 cubeVelocity = Vector(0,0,-5)
 
@@ -392,34 +463,12 @@ scene = Scene()
 def init():
     global scene
 
-    model = Matrix()
-    model = model.translate(-2,-20,-10)
-    scene.add_polyhedron("obstacle1a", Cube(model))
-    
-    model = Matrix()
-    model = model.scale(1,2,1)
-    model = model.translate(2,-19,-20)
-    scene.add_polyhedron("obstacle2a", Cube(model))
+    for gameObject in gameObjects:
+        gameObject.add()
 
-    model = Matrix()
-    model = model.translate(0,-20,-30)
-    scene.add_polyhedron("obstacle3a", Cube(model))
-
-    model = Matrix()
-    model = model.scale(1,2,1)
-    model = model.translate(2,-19,-40)
-    scene.add_polyhedron("obstacle4a", Cube(model))
-
-    model = model.translate(-4,0,0)
-    scene.add_polyhedron("obstacle4b", Cube(model))
-
-    model = Matrix()
-    model = model.translate(2,-20,-60)
-    scene.add_polyhedron("obstacle6a", Tetrahedron(model))
-    model = model.translate(-2,0,0)
-    scene.add_polyhedron("obstacle6b", Tetrahedron(model))
-    model = model.translate(-2,0,0)
-    scene.add_polyhedron("obstacle6c", Tetrahedron(model))
+    Spike("obstacle6a", translate=Vector(2,-20,-60)).add()
+    Spike("obstacle6b", translate=Vector(0,-20,-60)).add()
+    Spike("obstacle6c", translate=Vector(-2,-20,-60)).add()
 
 init()
 """INITIALIZE SCENE"""
@@ -452,20 +501,19 @@ def render(scene: object):
         elif not cubeVelocity.y > 0:
             cubeVelocity.y = 0
             cubePos.y = groundHeight
-        
+
         deltaX = cubeVelocity.x*deltaTime; deltaY = cubeVelocity.y*deltaTime; deltaZ = cubeVelocity.z*deltaTime
         cubePos.x += deltaX
         cubePos.y += deltaY
         if cubePos.y < groundHeight: cubePos.y = groundHeight
         cubePos.z += deltaZ
 
+        for gameObject in gameObjects:
+            gameObject.update()
+
         model = model.translate(cubePos.x,cubePos.y,cubePos.z)
-        view = view.translate(-deltaZ*0.7071, 0, -deltaZ*0.7071)
+        view = view.translate(10*deltaTime*0.7071, 0, 10*deltaTime*0.7071)
         scene.add_polyhedron("player", Cube(model, "gold"))
-        
-        model = Matrix()
-        model = model.scale(6,0,20)
-        model = model.translate(0,-21,cubePos.z)
 
         if cubePos.z+30 < -obstacleNumber*10:
             obstacleName = "obstacle"+str(obstacleNumber)
