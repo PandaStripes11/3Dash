@@ -529,7 +529,7 @@ class Player(GameObject):
         super().__init__(name, Cube(), translate, rotate, scale)
         self.velocity = velocity
         self.groundHeight = -20
-        self.viewPos = 25
+        self.viewPos = 15
         self.finished = False
     def update(self, deltaTime):
         position = self.transform["translate"]
@@ -568,7 +568,7 @@ class Player(GameObject):
         
         global view
         view = Matrix()
-        view = view.translate(15,14,-9)
+        view = view.translate(15,14,-15)
         view = view.rotate(Vector(0,1,0),45)
 
         self.transform["translate"] = Vector(0,0,0)
@@ -645,15 +645,15 @@ level4 = [
     Obstacle("obstacle6", translate=Vector(0,-16,-75), scale=Vector(3,1,3)),
     Obstacle("obstacle7", translate=Vector(0,-16,-90), scale=Vector(3,1,3)),
     Obstacle("obstacle8", translate=Vector(0,-16,-105), scale=Vector(3,1,3)),
-    Obstacle("obstacle9", translate=Vector(0,-16,-112), scale=Vector(3,4,1)),
-    Spike("obstacle10", translate=Vector(2,-12,-112)),
-    Spike("obstacle11", translate=Vector(0,-12,-112)),
-    Spike("obstacle12", translate=Vector(-2,-12,-112)), 
+    Obstacle("obstacle9", translate=Vector(-2,-16,-112), scale=Vector(3,4,1)),
+    Spike("obstacle10", translate=Vector(0,-12,-112)),
+    Spike("obstacle11", translate=Vector(-2,-12,-112)),
+    Spike("obstacle12", translate=Vector(-4,-12,-112)), 
     Obstacle("obstacle13", translate=Vector(0,-16,-120), scale=Vector(3,1,3)),
 
-    Spike("obstacle14", translate=Vector(2,-20,-110)),
-    Spike("obstacle15", translate=Vector(0,-20,-110)),
-    Spike("obstacle16", translate=Vector(-2,-20,-110)), 
+    Spike("obstacle14", translate=Vector(0,-20,-110)),
+    Spike("obstacle15", translate=Vector(-2,-20,-110)),
+    Spike("obstacle16", translate=Vector(-4,-20,-110)), 
 
     Finish("finish", translate=Vector(0,-8,-125), scale=(Vector(3,3,1)))
 ]
@@ -721,7 +721,7 @@ def render(
                 setColor(backgroundColor); fillRectangle(0,0,SCR_WIDTH,SCR_HEIGHT)
                 model = Matrix()
                 model = model.scale(3,0,41)
-                model = model.translate(-2,-20,gameObjects[0].viewPos+35)
+                model = model.translate(-2,-20,gameObjects[0].viewPos+45)
                 Cube(model,floorColor).draw() # Ground
                 scene.draw()
             ended = True
@@ -734,7 +734,7 @@ def render(
             setColor(backgroundColor); fillRectangle(0,0,SCR_WIDTH,SCR_HEIGHT)
             model = Matrix()
             model = model.scale(3,0,41)
-            model = model.translate(-2,-20,gameObjects[0].viewPos+35)
+            model = model.translate(-2,-20,gameObjects[0].viewPos+45)
             Cube(model,floorColor).draw() # Ground
             scene.draw()
         update()

@@ -110,33 +110,35 @@ completedLevels = [False]*8
 def locate(x,y):
    global levelsMenuIsActive
    global completedLevels
-   if inside(x,y,25,500,225,650) and not levelsMenuIsActive: #skin page
-      clear()
-      drawSkinPage()  
-      drawHomeBackground()
-   elif inside(x,y,1075,500,1275,650) and not levelsMenuIsActive: #question page
-      clear()
-      drawQuestionPage()
-   elif inside(x,y,50,25,175,75): #back
+   if inside(x,y,50,25,175,75): #back
       clear()
       drawHomeBackground()
-   elif inside(x,y,450,500,850,650) and not levelsMenuIsActive: #background page
-      clear()
-      drawBackgroundColorPage()
-      drawHomeBackground()
-   elif inside(x,y,475,350,800,450) and not levelsMenuIsActive: #play
-      clear()
-      drawLevels(completedLevels) 
-      drawBackButton()
-      levelsMenuIsActive = True
-   elif inside(x,y,100,100,300,300) and levelsMenuIsActive:
-      drawLevel(1)
-   elif inside(x,y,400,100,600,300) and levelsMenuIsActive:
-      drawLevel(2)
-   elif inside(x,y,700,100,900,300) and levelsMenuIsActive:
-      drawLevel(3)
-   elif inside(x,y,1000,100,1200,300) and levelsMenuIsActive:
-      drawLevel(4)
+   if not levelsMenuIsActive:
+      if inside(x,y,25,500,225,650): #skin page
+         clear()
+         drawSkinPage()  
+         drawHomeBackground()
+      elif inside(x,y,1075,500,1275,650): #question page
+         clear()
+         drawQuestionPage()
+      elif inside(x,y,450,500,850,650): #background page
+         clear()
+         drawBackgroundColorPage()
+         drawHomeBackground()
+      elif inside(x,y,475,350,800,450): #play
+         clear()
+         drawLevels(completedLevels) 
+         drawBackButton()
+         levelsMenuIsActive = True
+   if levelsMenuIsActive:
+      if inside(x,y,100,100,300,300):
+         drawLevel(1)
+      elif inside(x,y,400,100,600,300):
+         drawLevel(2)
+      elif inside(x,y,700,100,900,300):
+         drawLevel(3)
+      elif inside(x,y,1000,100,1200,300):
+         drawLevel(4)
 
 def drawLevel(level = 1):
    global completedLevels
