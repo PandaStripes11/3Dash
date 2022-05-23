@@ -646,11 +646,10 @@ def drawHeading(name,labNum):
    color("black")
    drawString(s,x,52,"Courier New",28,"bold")
    drawLine(0,50,window_width(),50)
-def drawTitle(s):
+def drawTitle(s, height=52):
    x = (window_width() - len(s)*28) // 2
    color("black")
-   drawString(s,x,52,"Courier New",28,"bold")
-   drawLine(0,50,window_width(),50)      
+   drawString(s,x,height,"Courier New",28,"bold")    
       
       
 # Determines if the "Turtle" coordinate (x,y) is inside the

@@ -7,7 +7,7 @@ SCR_HEIGHT = 700
 """ MATRICES """
 # View matrix (View space = camera view; transforms world coordinates to position of the "camera")
 view = Matrix()
-view = view.translate(15,14,-25)
+view = view.translate(15,14,-15)
 view = view.rotate(Vector(0,1,0),45)
 
 # Perspective projection matrix (Clip space = projects 3D coordinates to 2D range from -1.0 to 1.0)

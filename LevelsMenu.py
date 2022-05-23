@@ -4,7 +4,7 @@ def drawPlayButton():
    setColor("white")
    fillRectangle(475,325,800,450) #play button
    setColor("blue")
-   drawString("PLAY!",525,425,"Arial",60)
+   drawString("PLAY!",520,425,"Arial",60, "bold")
    
 def drawLevels():
    setBackground("blue")

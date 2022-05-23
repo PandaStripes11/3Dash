@@ -10,9 +10,6 @@ from CoordinateSpaceMatrices import *
 from Scene import Scene
 
 
-beginGrfx(SCR_WIDTH, SCR_HEIGHT) # Viewport dimensions
-
-
 
 
 # region Polygon
@@ -299,6 +296,7 @@ w_key = KeyState('w')
 a_key = KeyState('a')
 s_key = KeyState('s')
 d_key = KeyState('d')
+e_key = KeyState('e')
 space_key = KeyState('space')
 shift_key = KeyState('Shift_L')
 
@@ -315,7 +313,7 @@ def processInput():
         gameObjects[0].velocity.z = -20
     if a_key.down:
         #view = view.translate(0.1, 0, 0)
-        gameObjects[0].velocity.x = -15
+        gameObjects[0].velocity.x = -10
     if s_key.down:
         #view = view.translate(0, 0, -0.1)
         gameObjects[0].velocity.z= -10
@@ -325,7 +323,7 @@ def processInput():
     if not a_key.down and not d_key.down:
         gameObjects[0].velocity.x = 0
     if not s_key.down and not w_key.down:
-        gameObjects[0].velocity.z = -10
+        gameObjects[0].velocity.z = -15
 
     if space_key.down:
         #view = view.translate(0, -0.1, 0)
@@ -363,7 +361,7 @@ class GameObject():
             "rotate": rotate,
             "scale": scale
         }
-        self.viewPos = 25
+        self.viewPos = 15
 
     def add(self):
         model = Matrix()
@@ -387,7 +385,7 @@ class GameObject():
         self.viewPos += -15*deltaTime
         if self.transform["translate"].z >= self.viewPos:
             scene.remove_polyhedron(self.name)
-            self.viewPos = 25
+            self.viewPos = 15
 # endregion
 
 
@@ -525,7 +523,7 @@ class Player(GameObject):
         scale: Vector = Vector(1, 1, 1),
         velocity: Vector = Vector(0, 0, 0)
     ):
-        super().__init__(name, Cube(color="cornflowerblue"), translate, rotate, scale)
+        super().__init__(name, Cube(), translate, rotate, scale)
         self.velocity = velocity
         self.groundHeight = -20
         self.viewPos = 25
@@ -553,7 +551,7 @@ class Player(GameObject):
         if self.transform["translate"].z >= self.viewPos:
             if not self.finished:
                 self.kill()
-                self.viewPos = 25
+                self.viewPos = 15
             else:
                 scene.remove_polyhedron(self.name)
                 return
@@ -562,7 +560,7 @@ class Player(GameObject):
     def kill(self):
         global gameObjects
         for gameObject in gameObjects:
-            gameObject.viewPos = 25
+            gameObject.viewPos = 15
             gameObject.add()
         
         global view
@@ -582,15 +580,15 @@ class Player(GameObject):
 gameObjects = [
     Player("player", velocity=Vector(0,0,-15)),
 
-    Obstacle("obstacle1a", translate=Vector(-2,-20,-10)),
-    Obstacle("obstacle2a", translate=Vector(2,-19,-20), scale=Vector(1,2,1)),
-    Obstacle("obstacle3a", translate=Vector(0,-20,-30)),
-    Obstacle("obstacle4a", translate=Vector(2.5,-19,-40), scale=Vector(1,2,1)),
-    Obstacle("obstacle4b", translate=Vector(-2.5,-19,-40), scale=Vector(1,2,1)),
+    Obstacle("obstacle1a", translate=Vector(-2,-20,-20)),
+    Obstacle("obstacle2a", translate=Vector(2,-19,-30), scale=Vector(1,2,1)),
+    Obstacle("obstacle3a", translate=Vector(0,-20,-40)),
+    Obstacle("obstacle4a", translate=Vector(2.5,-19,-50), scale=Vector(1,2,1)),
+    Obstacle("obstacle4b", translate=Vector(-2.5,-19,-50), scale=Vector(1,2,1)),
 
-    Spike("obstacle6a", translate=Vector(2,-20,-60)),
-    Spike("obstacle6b", translate=Vector(0,-20,-60)),
-    Spike("obstacle6c", translate=Vector(-2,-20,-60)), 
+    Spike("obstacle6a", translate=Vector(2,-20,-70)),
+    Spike("obstacle6b", translate=Vector(0,-20,-70)),
+    Spike("obstacle6c", translate=Vector(-2,-20,-70)), 
 
     Finish("finish", translate=Vector(0,-18,-100), scale=(Vector(3,3,1)))
 ]
@@ -613,10 +611,13 @@ init()
 
 
 """ RENDER LOOP """
-def render(scene: object):
-    global view
+def render(scene: object, playerColor = "cornflowerblue"):
+    beginGrfx(SCR_WIDTH, SCR_HEIGHT) # Viewport dimensions
 
-    currFrame = None; prevFrame = time(); deltaTime = None
+    if playerColor: gameObjects[0].shape.color = playerColor
+
+    global view
+    currFrame = None; prevFrame = time(); deltaTime = None; ended = False
 
     while 0 == 0:
         currFrame = time()
@@ -631,14 +632,32 @@ def render(scene: object):
         view = view.translate(15*deltaTime*0.7071, 0, 15*deltaTime*0.7071)
             
         # Update buffers
-        clear()
-        scene.draw()
-        if gameObjects[0].finished: drawTitle("Level Complete!"); return
+        if gameObjects[0].finished: 
+            if not ended: 
+                clear()
+                model = Matrix()
+                model = model.scale(3,0,41)
+                model = model.translate(-2,-20,gameObjects[0].viewPos+35)
+                Cube(model,"lightslategray").draw() # Ground
+                scene.draw()
+            ended = True
+            drawTitle("Level Complete!")
+            drawTitle("Press E to exit.", 102)
+            global e_key
+            if e_key.down: return
+        else:
+            clear()
+            model = Matrix()
+            model = model.scale(3,0,41)
+            model = model.translate(-2,-20,gameObjects[0].viewPos+35)
+            Cube(model,"lightslategray").draw() # Ground
+            scene.draw()
         update()
-render(scene)
+
+    endGrfx()
 """ RENDER LOOP """
 
 
 
 
-endGrfx()
+
