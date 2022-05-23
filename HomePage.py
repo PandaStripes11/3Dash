@@ -124,13 +124,13 @@ def locate(x,y):
    elif inside(x,y,400,100,600,300) and levelsMenuIsActive:
       drawLevel(2)
    elif inside(x,y,700,100,900,300) and levelsMenuIsActive:
-      drawLevel()
+      drawLevel(3)
    elif inside(x,y,1000,100,1200,300) and levelsMenuIsActive:
-      drawLevel()
+      drawLevel(4)
 
 def drawLevel(level = 1):
    clear()
-   render(scene,  level=level, playerColor=cubeColor, floorColor=floorColor, backgroundColor=backgroundColor,)
+   render(level=level, playerColor=cubeColor, floorColor=floorColor, backgroundColor=backgroundColor,)
    clear()
    drawLevels()
    drawBackButton()

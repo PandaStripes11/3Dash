@@ -418,15 +418,18 @@ class Obstacle(GameObject):
         playerVelocity = gameObjects[0].velocity
 
         isInside = self._inside()
-        if isInside and playerPos.z >= self.transform["translate"].z+1:
+        if isInside and playerPos.z >= self.transform["translate"].z+self.transform["scale"].z-0.5:
             playerVelocity.z = 0
-            playerPos.z = self.transform["translate"].z + 2
+            playerPos.z = self.transform["translate"].z + self.transform["scale"].z+1
         elif isInside and playerVelocity.y < 0:
             playerVelocity.y = 0
             playerPos.y = self.transform["translate"].y + self.transform["scale"].y + 1
-        elif isInside and playerPos.z <= self.transform["translate"].z+2 and playerVelocity.x != 0:
-            if playerVelocity.x > 0: playerPos.x = self.transform["translate"].x - 2
-            else: playerPos.x = self.transform["translate"].x + 2
+        elif isInside and playerVelocity.y > 0:
+            playerVelocity.y = 0
+            playerPos.y = self.transform["translate"].y - self.transform["scale"].y -1
+        elif isInside and playerPos.z <= self.transform["translate"].z+self.transform["scale"].z+1 and playerVelocity.x != 0:
+            if playerVelocity.x > 0: playerPos.x = self.transform["translate"].x - self.transform["scale"].x - 1
+            else: playerPos.x = self.transform["translate"].x + self.transform["scale"].x + 1
             playerVelocity.x = 0
 # endregion
 
@@ -607,14 +610,50 @@ level2 = [
     Spike("obstacle3c", translate=Vector(-2,-18.9,-30)), 
 
     Obstacle("obstacle4b", translate=Vector(0,-18,-45), scale=Vector(3,3,1)),
-
     Obstacle("obstacle5b", translate=Vector(0,-18,-60), scale=Vector(3,3,1)),
-
     Obstacle("obstacle6b", translate=Vector(0,-18,-80), scale=Vector(3,3,1)),
-
     Obstacle("obstacle7b", translate=Vector(0,-18,-100), scale=Vector(3,3,1)),
 
     Finish("finish", translate=Vector(0,-18,-120), scale=(Vector(3,3,1)))
+]
+level3 = [
+    Player("player", velocity=Vector(0,0,-15), translate=Vector(0,0,0)),
+
+    Obstacle("obstacle1", translate=Vector(0,-20,-45), scale=Vector(3,1,3)),
+    Obstacle("obstacle2", translate=Vector(0,-18,-60), scale=Vector(3,1,3)),
+    Obstacle("obstacle3", translate=Vector(0,-16,-75), scale=Vector(3,1,3)),
+    Obstacle("obstacle4", translate=Vector(0,-16,-90), scale=Vector(3,1,3)),
+    Obstacle("obstacle5", translate=Vector(0,-16,-105), scale=Vector(3,1,3)),
+    Obstacle("obstacle6", translate=Vector(0,-16,-120), scale=Vector(3,1,3)),
+
+    Spike("obstacle1a", translate=Vector(2,-20,-110)),
+    Spike("obstacle1b", translate=Vector(0,-20,-110)),
+    Spike("obstacle1c", translate=Vector(-2,-20,-110)), 
+
+    Finish("finish", translate=Vector(0,-10,-125), scale=(Vector(3,3,1)))
+]
+level4 = [
+    Player("player", velocity=Vector(0,0,-15), translate=Vector(0,0,0)),
+
+    Spike("spike1a", translate=Vector(2,-20,-20)),
+    Spike("spike1b", translate=Vector(0,-20,-20)),
+    Spike("spike1c", translate=Vector(-2,-20,-20)), 
+
+    Obstacle("obstacle1", translate=Vector(0,-20,-45), scale=Vector(3,1,3)),
+    Obstacle("obstacle2", translate=Vector(0,-18,-60), scale=Vector(3,1,3)),
+    Obstacle("obstacle3", translate=Vector(0,-16,-75), scale=Vector(3,1,3)),
+    Obstacle("obstacle4", translate=Vector(0,-16,-90), scale=Vector(3,1,3)),
+    Obstacle("obstacle5", translate=Vector(0,-16,-105), scale=Vector(3,1,3)),
+    Spike("spike1", translate=Vector(2,-14,-112)),
+    Spike("spike2", translate=Vector(0,-14,-112)),
+    Spike("spike3", translate=Vector(-2,-14,-112)), 
+    Obstacle("obstacle6", translate=Vector(0,-16,-120), scale=Vector(3,1,3)),
+
+    Spike("spike4", translate=Vector(2,-20,-110)),
+    Spike("spike5", translate=Vector(0,-20,-110)),
+    Spike("spike6", translate=Vector(-2,-20,-110)), 
+
+    Finish("finish", translate=Vector(0,-10,-125), scale=(Vector(3,3,1)))
 ]
 # endregion
 
@@ -629,6 +668,8 @@ def init(level = 1):
     global gameObjects
     if level == 1: gameObjects = deepcopy(level1)
     elif level == 2: gameObjects = deepcopy(level2)
+    elif level == 3: gameObjects = deepcopy(level3)
+    elif level == 4: gameObjects = deepcopy(level4)
     else: gameObjects = deepcopy(level1)
 
     for gameObject in gameObjects:
@@ -640,7 +681,6 @@ def init(level = 1):
 
 """ RENDER LOOP """
 def render(
-    scene: object, 
     level = 1, 
     playerColor = "cornflowerblue", 
     floorColor = "lightslategray",
@@ -648,6 +688,7 @@ def render(
 ):
     beginGrfx(SCR_WIDTH, SCR_HEIGHT) # Viewport dimensions
 
+    global scene
     init(level)
     if playerColor: gameObjects[0].shape.color = playerColor
 
@@ -693,7 +734,7 @@ def render(
             Cube(model,floorColor).draw() # Ground
             scene.draw()
         update()
-    endGrfx()
+    scene = Scene()
 """ RENDER LOOP """
 
 
