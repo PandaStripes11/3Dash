@@ -312,24 +312,24 @@ def processInput():
 
     if w_key.down:
         #view = view.translate(0, 0, 0.1)
-        cubeVelocity.z = -15
+        gameObjects[0].velocity.z = -20
     if a_key.down:
         #view = view.translate(0.1, 0, 0)
-        cubeVelocity.x = -10
+        gameObjects[0].velocity.x = -15
     if s_key.down:
         #view = view.translate(0, 0, -0.1)
-        cubeVelocity.z = -5
+        gameObjects[0].velocity.z= -10
     if d_key.down:
         #view = view.translate(-0.1, 0, 0)
-        cubeVelocity.x = 10
+        gameObjects[0].velocity.x = 10
     if not a_key.down and not d_key.down:
-        cubeVelocity.x = 0
+        gameObjects[0].velocity.x = 0
     if not s_key.down and not w_key.down:
-        cubeVelocity.z = -10
+        gameObjects[0].velocity.z = -10
 
     if space_key.down:
         #view = view.translate(0, -0.1, 0)
-        if cubeVelocity.y == 0: cubeVelocity.y = 40
+        if gameObjects[0].velocity.y == 0: gameObjects[0].velocity.y = 40
     if shift_key.down:
         view = view.translate(0, 0.1, 0)
 
@@ -363,19 +363,31 @@ class GameObject():
             "rotate": rotate,
             "scale": scale
         }
+        self.viewPos = 25
 
     def add(self):
         model = Matrix()
-        if self.transform["scale"].arr[:3] != [1,1,1]:     # Scale
-            model = model.scale(*self.transform["scale"].arr[:3])
-        if self.transform["rotate"][1] != 0:               # Rotate
+        model = model.scale(                    # Scale
+            self.transform["scale"].x,
+            self.transform["scale"].y,
+            self.transform["scale"].z
+        )
+        if self.transform["rotate"][1] != 0:    # Rotate
             model = model.rotate(self.transform["rotate"][0].normalize(), self.transform["rotate"][1])
-        if self.transform["translate"].arr[:3] != [0,0,0]: # Translate
-            model = model.translate(*self.transform["translate"].arr[:3])
+        model = model.translate(                # Translate
+            self.transform["translate"].x,
+            self.transform["translate"].y,
+            self.transform["translate"].z
+        )
 
         global scene
         self.shape.model = model
         scene.add_polyhedron(self.name, self.shape)
+    def update(self, deltaTime = None):
+        self.viewPos += -15*deltaTime
+        if self.transform["translate"].z >= self.viewPos:
+            scene.remove_polyhedron(self.name)
+            self.viewPos = 25
 # endregion
 
 
@@ -385,36 +397,40 @@ class GameObject():
 class Obstacle(GameObject):
     def __init__(self, name: str, translate: Vector = Vector(0, 0, 0), rotate: list = [Vector(1, 0, 0), 0], scale: Vector = Vector(1, 1, 1)):
         super().__init__(name, Cube(), translate, rotate, scale)
-    def _inside(self, cubePos):
+    def _inside(self):
         obstaclePos = self.transform["translate"]
         obstacleScale = self.transform["scale"]
         obstacleMin = Vector(obstaclePos.x - 1*obstacleScale.x, obstaclePos.y - 1*obstacleScale.y, obstaclePos.z - 1*obstacleScale.z)
         obstacleMax = Vector(obstaclePos.x + 1*obstacleScale.x, obstaclePos.y + 1*obstacleScale.y, obstaclePos.z + 1*obstacleScale.z)
 
-        cubeMin = Vector(cubePos.x-1, cubePos.y-1, cubePos.z-1)
-        cubeMax = Vector(cubePos.x+1, cubePos.y+1, cubePos.z+1)
+        playerPos = gameObjects[0].transform["translate"]
+        cubeMin = Vector(playerPos.x-1, playerPos.y-1, playerPos.z-1)
+        cubeMax = Vector(playerPos.x+1, playerPos.y+1, playerPos.z+1)
         
         return (
             (obstacleMin.x < cubeMax.x and obstacleMax.x > cubeMin.x) and
             (obstacleMin.y < cubeMax.y and obstacleMax.y > cubeMin.y) and
             (obstacleMin.z < cubeMax.z and obstacleMax.z > cubeMin.z)
         )
-    def update(self):
+    def update(self, deltaTime = None):
         global scene
-        if cubePos.z+30 <= self.transform["translate"].z:
-            scene.remove_polyhedron(self.name)
+        
+        super().update(deltaTime)
 
-        isInside = self._inside(cubePos)
-        if isInside and cubePos.z >= self.transform["translate"].z+1:
-            cubeVelocity.z = 0
-            cubePos.z = self.transform["translate"].z + 2
-        elif isInside and cubeVelocity.y < 0:
-            cubeVelocity.y = 0
-            cubePos.y = self.transform["translate"].y + self.transform["scale"].y + 1
-        elif isInside and cubePos.z <= self.transform["translate"].z+2 and cubeVelocity.x != 0:
-            if cubeVelocity.x > 0: cubePos.x = self.transform["translate"].x - 2
-            else: cubePos.x = self.transform["translate"].x + 2
-            cubeVelocity.x = 0
+        playerPos = gameObjects[0].transform["translate"]
+        playerVelocity = gameObjects[0].velocity
+
+        isInside = self._inside()
+        if isInside and playerPos.z >= self.transform["translate"].z+1:
+            playerVelocity.z = 0
+            playerPos.z = self.transform["translate"].z + 2
+        elif isInside and playerVelocity.y < 0:
+            playerVelocity.y = 0
+            playerPos.y = self.transform["translate"].y + self.transform["scale"].y + 1
+        elif isInside and playerPos.z <= self.transform["translate"].z+2 and playerVelocity.x != 0:
+            if playerVelocity.x > 0: playerPos.x = self.transform["translate"].x - 2
+            else: playerPos.x = self.transform["translate"].x + 2
+            playerVelocity.x = 0
 # endregion
 
 
@@ -425,11 +441,76 @@ class Spike(GameObject):
     def __init__(self, name: str, translate: Vector = Vector(0, 0, 0), rotate: list = [Vector(1, 0, 0), 0], scale: Vector = Vector(1, 1, 1)):
         super().__init__(name, Tetrahedron(color="red"), translate, rotate, scale)
     def _inside(self):
-        pass
-    def update(self):
+        obstaclePos = self.transform["translate"]
+        obstacleScale = self.transform["scale"]
+        obstacleMin = Vector(obstaclePos.x - 1*obstacleScale.x, obstaclePos.y - 1*obstacleScale.y, obstaclePos.z - 1*obstacleScale.z)
+        obstacleMax = Vector(obstaclePos.x + 1*obstacleScale.x, obstaclePos.y + 1*obstacleScale.y, obstaclePos.z + 1*obstacleScale.z)
+
+        
+        playerPos = gameObjects[0].transform["translate"]
+        cubeMin = Vector(playerPos.x-1, playerPos.y-1, playerPos.z-1)
+        cubeMax = Vector(playerPos.x+1, playerPos.y+1, playerPos.z+1)
+        
+        return (
+            (obstacleMin.x < cubeMax.x and obstacleMax.x > cubeMin.x) and
+            (obstacleMin.y < cubeMax.y and obstacleMax.y > cubeMin.y) and
+            (obstacleMin.z < cubeMax.z and obstacleMax.z > cubeMin.z)
+        )
+    def update(self, deltaTime = None):
+        super().update(deltaTime)
+
+        playerPos = gameObjects[0].transform["translate"]
+        playerVelocity = gameObjects[0].velocity
         if self._inside():
-            # Kill cube
-            pass
+            playerPos.x = 0; playerPos.y = 0; playerPos.z = 0
+            playerVelocity.x = 0; playerVelocity.y = 0; playerVelocity.z = 0
+
+            gameObjects[0].kill()
+# endregion
+
+
+
+
+# region Finish
+class Finish(GameObject):
+    def __init__(self, name: str, translate: Vector = Vector(0, 0, 0), rotate: list = [Vector(1, 0, 0), 0], scale: Vector = Vector(1, 1, 1)):
+        super().__init__(name, Cube(color="white"), translate, rotate, scale)
+        self.finished = False
+    def _inside(self):
+        obstaclePos = self.transform["translate"]
+        obstacleScale = self.transform["scale"]
+        obstacleMin = Vector(obstaclePos.x - 1*obstacleScale.x, obstaclePos.y - 1*obstacleScale.y, obstaclePos.z - 1*obstacleScale.z)
+        obstacleMax = Vector(obstaclePos.x + 1*obstacleScale.x, obstaclePos.y + 1*obstacleScale.y, obstaclePos.z + 1*obstacleScale.z)
+
+        playerPos = gameObjects[0].transform["translate"]
+        cubeMin = Vector(playerPos.x-1, playerPos.y-1, playerPos.z-1)
+        cubeMax = Vector(playerPos.x+1, playerPos.y+1, playerPos.z+1)
+        
+        return (
+            (obstacleMin.x < cubeMax.x and obstacleMax.x > cubeMin.x) and
+            (obstacleMin.y < cubeMax.y and obstacleMax.y > cubeMin.y) and
+            (obstacleMin.z < cubeMax.z and obstacleMax.z > cubeMin.z)
+        )
+    def update(self, deltaTime = None):
+        super().update(deltaTime)
+
+        if self._inside() or self.finished:
+            self.finished = True
+            gameObjects[0].finish()
+
+        isInside = self._inside()
+        playerPos = gameObjects[0].transform["translate"]
+        playerVelocity = gameObjects[0].velocity
+        if isInside and playerPos.z >= self.transform["translate"].z+1:
+            playerVelocity.z = 0
+            playerPos.z = self.transform["translate"].z + 2
+        elif isInside and playerVelocity.y < 0:
+            playerVelocity.y = 0
+            playerPos.y = self.transform["translate"].y + self.transform["scale"].y + 1
+        elif isInside and playerPos.z <= self.transform["translate"].z+2 and playerVelocity.x != 0:
+            if playerVelocity.x > 0: playerPos.x = self.transform["translate"].x - 2
+            else: playerPos.x = self.transform["translate"].x + 2
+            playerVelocity.x = 0
 # endregion
 
 
@@ -437,23 +518,82 @@ class Spike(GameObject):
 
 # region Player
 class Player(GameObject):
-    def __init__(self, name: str, translate: Vector = Vector(0, 0, 0), rotate: list = [Vector(1, 0, 0), 0], scale: Vector = Vector(1, 1, 1)):
-        super().__init__(name, Cube(color="gold"), translate, rotate, scale)
+    def __init__(self, 
+        name: str, 
+        translate: Vector = Vector(0, 0, 0), 
+        rotate: list = [Vector(1, 0, 0), 0], 
+        scale: Vector = Vector(1, 1, 1),
+        velocity: Vector = Vector(0, 0, 0)
+    ):
+        super().__init__(name, Cube(color="cornflowerblue"), translate, rotate, scale)
+        self.velocity = velocity
+        self.groundHeight = -20
+        self.viewPos = 25
+        self.finished = False
+    def update(self, deltaTime):
+        position = self.transform["translate"]
+        if position.y > self.groundHeight:
+           self.velocity.y -= 10*9.87*deltaTime
+        elif not self.velocity.y > 0:
+            self.velocity.y = 0
+            self.transform["translate"].y = self.groundHeight
+
+        if position.x < -2:
+            self.transform["translate"].x = -2
+        elif position.x > 2:
+            self.transform["translate"].x = 2
+
+        deltaX = self.velocity.x*deltaTime; deltaY = self.velocity.y*deltaTime; deltaZ = self.velocity.z*deltaTime
+        self.transform["translate"].x += deltaX
+        self.transform["translate"].y += deltaY
+        if self.transform["translate"].y < self.groundHeight: self.transform["translate"].y = self.groundHeight
+        self.transform["translate"].z += deltaZ
+
+        self.viewPos += -15*deltaTime
+        if self.transform["translate"].z >= self.viewPos:
+            if not self.finished:
+                self.kill()
+                self.viewPos = 25
+            else:
+                scene.remove_polyhedron(self.name)
+                return
+
+        self.add()
+    def kill(self):
+        global gameObjects
+        for gameObject in gameObjects:
+            gameObject.viewPos = 25
+            gameObject.add()
+        
+        global view
+        view = Matrix()
+        view = view.translate(15,14,-25)
+        view = view.rotate(Vector(0,1,0),45)
+
+        self.transform["translate"] = Vector(0,0,0)
+    def finish(self,test=None):
+        self.finished = True
+        self.shape.color = "green"
 # endregion
 
 
 
 
 gameObjects = [
+    Player("player", velocity=Vector(0,0,-15)),
+
     Obstacle("obstacle1a", translate=Vector(-2,-20,-10)),
     Obstacle("obstacle2a", translate=Vector(2,-19,-20), scale=Vector(1,2,1)),
     Obstacle("obstacle3a", translate=Vector(0,-20,-30)),
     Obstacle("obstacle4a", translate=Vector(2.5,-19,-40), scale=Vector(1,2,1)),
-    Obstacle("obstacle4b", translate=Vector(-2.5,-19,-40), scale=Vector(1,2,1))
-]
+    Obstacle("obstacle4b", translate=Vector(-2.5,-19,-40), scale=Vector(1,2,1)),
 
-cubePos = Vector(0,0,0)
-cubeVelocity = Vector(0,0,-5)
+    Spike("obstacle6a", translate=Vector(2,-20,-60)),
+    Spike("obstacle6b", translate=Vector(0,-20,-60)),
+    Spike("obstacle6c", translate=Vector(-2,-20,-60)), 
+
+    Finish("finish", translate=Vector(0,-18,-100), scale=(Vector(3,3,1)))
+]
 
 
 
@@ -466,16 +606,11 @@ def init():
     for gameObject in gameObjects:
         gameObject.add()
 
-    Spike("obstacle6a", translate=Vector(2,-20,-60)).add()
-    Spike("obstacle6b", translate=Vector(0,-20,-60)).add()
-    Spike("obstacle6c", translate=Vector(-2,-20,-60)).add()
-
 init()
 """INITIALIZE SCENE"""
 
 
-# TODO: Create Game State
-# TODO: Create UI classes
+
 
 """ RENDER LOOP """
 def render(scene: object):
@@ -483,10 +618,6 @@ def render(scene: object):
 
     currFrame = None; prevFrame = time(); deltaTime = None
 
-    global cubeVelocity
-    global cubePos
-    groundHeight = -20
-    obstacleNumber = 1
     while 0 == 0:
         currFrame = time()
         deltaTime = currFrame - prevFrame
@@ -494,35 +625,15 @@ def render(scene: object):
 
         processInput()
 
-        # Player
-        model = Matrix()
-        if cubePos.y > groundHeight:
-           cubeVelocity.y -= 10*9.87*deltaTime
-        elif not cubeVelocity.y > 0:
-            cubeVelocity.y = 0
-            cubePos.y = groundHeight
-
-        deltaX = cubeVelocity.x*deltaTime; deltaY = cubeVelocity.y*deltaTime; deltaZ = cubeVelocity.z*deltaTime
-        cubePos.x += deltaX
-        cubePos.y += deltaY
-        if cubePos.y < groundHeight: cubePos.y = groundHeight
-        cubePos.z += deltaZ
-
         for gameObject in gameObjects:
-            gameObject.update()
+            gameObject.update(deltaTime)
 
-        model = model.translate(cubePos.x,cubePos.y,cubePos.z)
-        view = view.translate(10*deltaTime*0.7071, 0, 10*deltaTime*0.7071)
-        scene.add_polyhedron("player", Cube(model, "gold"))
-
-        if cubePos.z+30 < -obstacleNumber*10:
-            obstacleName = "obstacle"+str(obstacleNumber)
-            scene.remove_polyhedron(obstacleName+"a"); scene.remove_polyhedron(obstacleName+"b"); scene.remove_polyhedron(obstacleName+"c")
-            obstacleNumber += 1
+        view = view.translate(15*deltaTime*0.7071, 0, 15*deltaTime*0.7071)
             
         # Update buffers
         clear()
         scene.draw()
+        if gameObjects[0].finished: drawTitle("Level Complete!"); return
         update()
 render(scene)
 """ RENDER LOOP """

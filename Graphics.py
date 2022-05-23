@@ -250,7 +250,7 @@ def drawRegularPolygon(centerX,centerY,r,numSides):
    if numSides < 2:
       numSides = 2
    if numSides % 2 == 0:
-	   rotate = rotate + pi / numSides
+      rotate = rotate + pi / numSides
    radian = 0
    count = 0
    step = 2 * pi / numSides
@@ -645,7 +645,12 @@ def drawHeading(name,labNum):
    x = (window_width() - len(s)*28) // 2
    color("black")
    drawString(s,x,52,"Courier New",28,"bold")
-   drawLine(0,50,window_width(),50)    
+   drawLine(0,50,window_width(),50)
+def drawTitle(s):
+   x = (window_width() - len(s)*28) // 2
+   color("black")
+   drawString(s,x,52,"Courier New",28,"bold")
+   drawLine(0,50,window_width(),50)      
       
       
 # Determines if the "Turtle" coordinate (x,y) is inside the
