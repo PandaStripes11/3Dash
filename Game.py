@@ -310,7 +310,6 @@ def processInput():
     if w_key.down:
         #view = view.translate(0, 0, 0.1)
         gameObjects[0].velocity.z = -20
-        print(id(gameObjects[0]), gameObjects[0].velocity.z, "w")
     if a_key.down:
         #view = view.translate(0.1, 0, 0)
         gameObjects[0].velocity.x = -10
