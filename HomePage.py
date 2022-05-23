@@ -139,6 +139,8 @@ def locate(x,y):
          drawLevel(3)
       elif inside(x,y,1000,100,1200,300):
          drawLevel(4)
+      elif inside(x,y,100,400,300,600):
+         drawLevel(5)
 
 def drawLevel(level = 1):
    global completedLevels

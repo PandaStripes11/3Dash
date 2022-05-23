@@ -539,16 +539,16 @@ class Player(GameObject):
             self.velocity.y = 0
             self.transform["translate"].y = self.groundHeight
 
-        if position.x < -2:
-            self.transform["translate"].x = -2
-        elif position.x > 2:
-            self.transform["translate"].x = 2
-
         deltaX = self.velocity.x*deltaTime; deltaY = self.velocity.y*deltaTime; deltaZ = self.velocity.z*deltaTime
         self.transform["translate"].x += deltaX
         self.transform["translate"].y += deltaY
         if self.transform["translate"].y < self.groundHeight: self.transform["translate"].y = self.groundHeight
         self.transform["translate"].z += deltaZ
+
+        if position.x < -2:
+            self.transform["translate"].x = -2
+        elif position.x > 2:
+            self.transform["translate"].x = 2
 
         self.viewPos += -15*deltaTime
         if self.transform["translate"].z >= self.viewPos:
@@ -588,27 +588,23 @@ level1 = [
     Obstacle("obstacle1", translate=Vector(-2,-20,-20)),
     Obstacle("obstacle2", translate=Vector(2,-19,-30), scale=Vector(1,2,1)),
     Obstacle("obstacle3", translate=Vector(0,-20,-40)),
-    Obstacle("obstacle4", translate=Vector(2.5,-19,-50), scale=Vector(1,2,1)),
-    Obstacle("obstacle5", translate=Vector(-2.5,-19,-50), scale=Vector(1,2,1)),
+    Obstacle("obstacle4", translate=Vector(2.2,-19,-50), scale=Vector(1,2,1)),
+    Obstacle("obstacle5", translate=Vector(-2.2,-19,-50), scale=Vector(1,2,1)),
 
-    Spike("obstacle6", translate=Vector(2,-20,-70)),
-    Spike("obstacle7", translate=Vector(0,-20,-70)),
-    Spike("obstacle8", translate=Vector(-2,-20,-70)), 
+    Spike("obstacle6", translate=Vector(1,-20,-70)),
+    Spike("obstacle7", translate=Vector(-1,-20,-70)),
+    Spike("obstacle8", translate=Vector(-3,-20,-70)), 
 
     Finish("finish", translate=Vector(0,-18,-100), scale=(Vector(3,3,1)))
 ]
 level2 = [
     Player("player", velocity=Vector(0,0,-15), translate=Vector(0,0,0)),
 
-    Spike("obstacle1", translate=Vector(2,-20,-20)),
-    Spike("obstacle2", translate=Vector(0,-20,-20)),
-    Spike("obstacle3", translate=Vector(-2,-20,-20)), 
+    Spike("obstacle1", translate=Vector(1,-20,-20)),
+    Spike("obstacle2", translate=Vector(-1,-20,-20)),
+    Spike("obstacle3", translate=Vector(-3,-20,-20)), 
 
-    Obstacle("obstacle4", translate=Vector(0,-20,-30), scale=Vector(3,1,1)), 
-
-    Spike("obstacle5", translate=Vector(2,-18.9,-30)),
-    Spike("obstacle6", translate=Vector(0,-18.9,-30)),
-    Spike("obstacle7", translate=Vector(-2,-18.9,-30)), 
+    Obstacle("obstacle4", translate=Vector(0,-19,-30), scale=Vector(3,2,1)), 
 
     Obstacle("obstacle8", translate=Vector(0,-18,-45), scale=Vector(3,3,1)),
     Obstacle("obstacle9", translate=Vector(0,-18,-60), scale=Vector(3,3,1)),
@@ -627,33 +623,58 @@ level3 = [
     Obstacle("obstacle5", translate=Vector(0,-16,-105), scale=Vector(3,1,3)),
     Obstacle("obstacle6", translate=Vector(0,-16,-120), scale=Vector(3,1,3)),
 
-    Spike("obstacle7", translate=Vector(2,-20,-110)),
-    Spike("obstacle8", translate=Vector(0,-20,-110)),
-    Spike("obstacle9", translate=Vector(-2,-20,-110)), 
+    Spike("obstacle7", translate=Vector(1,-20,-140)),
+    Spike("obstacle8", translate=Vector(-1,-20,-140)),
+    Spike("obstacle9", translate=Vector(-3,-20,-140)), 
 
     Finish("finish", translate=Vector(0,-10,-125), scale=(Vector(3,3,1)))
 ]
 level4 = [
     Player("player", velocity=Vector(0,0,-15), translate=Vector(0,0,0)),
 
-    Spike("obstacle1", translate=Vector(2,-20,-20)),
-    Spike("obstacle2", translate=Vector(0,-20,-20)),
-    Spike("obstacle3", translate=Vector(-2,-20,-20)), 
+    Spike("obstacle1", translate=Vector(1,-20,-20)),
+    Spike("obstacle2", translate=Vector(-1,-20,-20)),
+    Spike("obstacle3", translate=Vector(-3,-20,-20)), 
 
     Obstacle("obstacle4", translate=Vector(0,-20,-45), scale=Vector(3,1,3)),
     Obstacle("obstacle5", translate=Vector(0,-18,-60), scale=Vector(3,1,3)),
     Obstacle("obstacle6", translate=Vector(0,-16,-75), scale=Vector(3,1,3)),
-    Obstacle("obstacle7", translate=Vector(0,-16,-90), scale=Vector(3,1,3)),
-    Obstacle("obstacle8", translate=Vector(0,-16,-105), scale=Vector(3,1,3)),
-    Obstacle("obstacle9", translate=Vector(-2,-16,-112), scale=Vector(3,4,1)),
-    Spike("obstacle10", translate=Vector(0,-12,-112)),
-    Spike("obstacle11", translate=Vector(-2,-12,-112)),
-    Spike("obstacle12", translate=Vector(-4,-12,-112)), 
-    Obstacle("obstacle13", translate=Vector(0,-16,-120), scale=Vector(3,1,3)),
+    Obstacle("obstacle7", translate=Vector(-2,-15,-83), scale=Vector(3,5,1)),
+    Obstacle("obstacle8", translate=Vector(0,-16,-90), scale=Vector(3,1,3)),
+    Obstacle("obstacle9", translate=Vector(-2,-15,-97), scale=Vector(3,5,1)),
+    Obstacle("obstacle10", translate=Vector(0,-16,-105), scale=Vector(3,1,3)),
+    Obstacle("obstacle11", translate=Vector(-2,-15,-112), scale=Vector(3,5,1)),
+    Obstacle("obstacle12", translate=Vector(0,-16,-120), scale=Vector(3,1,3)),
 
-    Spike("obstacle14", translate=Vector(0,-20,-110)),
-    Spike("obstacle15", translate=Vector(-2,-20,-110)),
-    Spike("obstacle16", translate=Vector(-4,-20,-110)), 
+    Spike("obstacle14", translate=Vector(1,-20,-75)),
+    Spike("obstacle15", translate=Vector(-1,-20,-75)),
+    Spike("obstacle16", translate=Vector(-3,-20,-75)), 
+
+    Finish("finish", translate=Vector(0,-8,-125), scale=(Vector(3,3,1)))
+]
+level5 = [
+    Player("player", velocity=Vector(0,0,-15), translate=Vector(0,0,0)),
+
+    Spike("obstacle1", translate=Vector(1,-20,-20)),
+    Spike("obstacle2", translate=Vector(-1,-20,-20)),
+    Spike("obstacle3", translate=Vector(-3,-20,-20)),
+
+    Obstacle("obstacle4", translate=Vector(-1,-16,-40), scale=Vector(2,5,1)),
+    Obstacle("obstacle5", translate=Vector(2,-18,-40), scale=Vector(1,3,1)),
+
+    Obstacle("obstacle6", translate=Vector(1,-16,-60), scale=Vector(2,5,1)),
+    Obstacle("obstacle7", translate=Vector(-2,-18,-60), scale=Vector(1,3,1)),
+
+    Obstacle("obstacle8", translate=Vector(0,-18,-80), scale=Vector(3,3,1)),
+
+    Obstacle("obstacle9", translate=Vector(3,-16,-100), scale=Vector(1,5,1)),
+    Obstacle("obstacle10", translate=Vector(-2,-16,-100), scale=Vector(1,5,1)),
+
+    Obstacle("obstacle11", translate=Vector(0,-18,-110), scale=Vector(3,3,1)),
+
+    Spike("obstacle12", translate=Vector(1,-20,-140)),
+    Spike("obstacle13", translate=Vector(-1,-20,-140)),
+    Spike("obstacle14", translate=Vector(-3,-20,-140)), 
 
     Finish("finish", translate=Vector(0,-8,-125), scale=(Vector(3,3,1)))
 ]
@@ -673,6 +694,7 @@ def init(level = 1):
     elif level == 2: gameObjects = deepcopy(level2)
     elif level == 3: gameObjects = deepcopy(level3)
     elif level == 4: gameObjects = deepcopy(level4)
+    elif level == 5: gameObjects = deepcopy(level5)
     else: gameObjects = deepcopy(level1)
 
     for gameObject in gameObjects:
@@ -721,7 +743,7 @@ def render(
                 setColor(backgroundColor); fillRectangle(0,0,SCR_WIDTH,SCR_HEIGHT)
                 model = Matrix()
                 model = model.scale(3,0,41)
-                model = model.translate(-2,-20,gameObjects[0].viewPos+45)
+                model = model.translate(-1.5,-20,gameObjects[0].viewPos+45)
                 Cube(model,floorColor).draw() # Ground
                 scene.draw()
             ended = True
@@ -734,7 +756,7 @@ def render(
             setColor(backgroundColor); fillRectangle(0,0,SCR_WIDTH,SCR_HEIGHT)
             model = Matrix()
             model = model.scale(3,0,41)
-            model = model.translate(-2,-20,gameObjects[0].viewPos+45)
+            model = model.translate(-1.5,-20,gameObjects[0].viewPos+45)
             Cube(model,floorColor).draw() # Ground
             scene.draw()
         update()
